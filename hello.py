@@ -1,16 +1,43 @@
+import argparse
 import gippy
 import json
 import math
 import random
+import sys
 
 from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
 
 
-# Format values to 3 decimal points to avoid floating point errors
-def refine_value(val):
-    return float("{:.3f}".format(val)) + 0.0
+def parse_args(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', help="Input image (1 file)", required=True)
+    parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
+
+    return parser.parse_args(args)
+
+
+def open_image(filename, bands):
+    # Open image
+    img = Image.open(filename)
+    img_size = img.size
+
+    # Convert to GeoImage
+    geoimg = gippy.GeoImage(filename, True).select(bands)
+
+    return geoimg, img_size
+
+
+def init_shape(img_size):
+    # Shape starting location in center 25% of image
+    x_start = random.randint(img_size[0] * 0.25, img_size[0] * 0.75)
+    y_start = random.randint(img_size[1] * 0.25, img_size[1] * 0.75)
+
+    # Get shape points with side length 10% of image size
+    side_len = min(img_size[0] * 0.1, img_size[1] * 0.1)
+
+    return x_start, y_start, side_len
 
 
 def create_shape(start_position, side_length):
@@ -43,64 +70,75 @@ def create_shape(start_position, side_length):
     return lines
 
 
+# Format values to 3 decimal points to avoid floating point errors
+def refine_value(val):
+    return float("{:.3f}".format(val)) + 0.0
+
+
 def points_to_geojson(points):
     features = []
     feature_setup = {
-        'type' : 'Feature',
-        'properties' : {
-            'source' : 'imagery'
+        'type': 'Feature',
+        'properties': {
+            'source': 'imagery'
         }
     }
     features.append(feature_setup)
     coord = []
     for pt in points:
         coord.append([pt[0], pt[1]])
-    features[0]['geometry'] =  {
-            'type' : 'LineString',
-            'coordinates' : coord
-        }
+    features[0]['geometry'] = {
+        'type': 'LineString',
+        'coordinates': coord
+    }
     return features
 
 
-def main(filename, bands=[1,1]):
-    # Open image
-    img = Image.open(filename)
-    img_size = img.size
-
-    # Make image GeoImage
-    geoimg = gippy.GeoImage(filename, True).select(bands)
-
-    # Shape starting location in center 25% of image
-    x_start = random.randint(img_size[0]*0.25, img_size[0]*0.75)
-    y_start = random.randint(img_size[1]*0.25, img_size[1]*0.75)
-
-    # Get shape points with side length 10% of image size
-    side_len = min(img_size[0] * 0.1, img_size[1] * 0.1)
-    shape = create_shape([x_start, y_start], side_len)
-
-    # Convert shape points to latitude-longitude
+def convert_latlon(geoimg, shape):
+    # Initialize reference from image
     srs = osr.SpatialReference(geoimg.srs()).ExportToProj4()
     projin = Proj(srs)
     projout = Proj(init='epsg:4326')
-    new_shape = []
+
+    # Define geo_shape to hold coordinates of shape relative to image latitude-longitude
+    geo_shape = []
     for point in shape:
-        pt = geoimg.geoloc(point[0], point[1])
-        geo_pt = transform(projin, projout, pt.x(), pt.y())
-        new_shape.append(geo_pt)
+        loc = geoimg.geoloc(point[0], point[1])
+        geo_pt = transform(projin, projout, loc.x(), loc.y())
+        geo_shape.append(geo_pt)
 
-    # Convert shape points to geojson
-    geojson = {
-        'type' : 'FeatureCollection',
-        'features' : points_to_geojson(new_shape)
-    }
+    return geo_shape
 
-    # Write geojson to a file
+
+def process_fileout(filename, geojson):
     fileout = filename.split(".")[0] + ".geojson"
     with open(fileout, 'w') as f:
         f.write(json.dumps(geojson, indent=4))
+
+
+def main(filename, bands=[1, 1]):
+    # Process file
+    geoimg, img_size = open_image(filename, bands)
+
+    # Shape construction
+    x, y, length = init_shape(img_size)
+    shape = create_shape([x, y], length)
+
+    # Convert shape to relative latitude-longitude coordinates
+    geo_shape = convert_latlon(geoimg, shape)
+
+    # Write coordinates as geojson
+    geojson = {
+        'type': 'FeatureCollection',
+        'features': points_to_geojson(geo_shape)
+    }
+
+    # Write geojson to a file
+    process_fileout(filename, geojson)
 
     # Return geojson
     return geojson
 
 
-main("Qatar_R3C2.tif")
+args = parse_args(sys.argv[1:])
+main(args.input)
