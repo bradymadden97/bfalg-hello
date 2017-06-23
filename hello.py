@@ -13,9 +13,9 @@ def refine_value(val):
     return float("{:.3f}".format(val)) + 0.0
 
 
-def create_shape(start_position, side_length=50.0):
+def create_shape(start_position, side_length):
     # Select random number of sides on shape
-    shape_sides = random.randint(3, 9)
+    shape_sides = random.choice([3, 4, 5, 6, 8, 9, 10, 12])
 
     # Calculate inner angle of shape
     shape_angle = math.radians(180 - float((360 / shape_sides)))
@@ -74,8 +74,9 @@ def main(filename, bands=[1,1]):
     x_start = random.randint(img_size[0]*0.25, img_size[0]*0.75)
     y_start = random.randint(img_size[1]*0.25, img_size[1]*0.75)
 
-    # Get shape points
-    shape = create_shape([x_start, y_start])
+    # Get shape points with side length 10% of image size
+    side_len = min(img_size[0] * 0.1, img_size[1] * 0.1)
+    shape = create_shape([x_start, y_start], side_len)
 
     # Convert shape points to latitude-longitude
     srs = osr.SpatialReference(geoimg.srs()).ExportToProj4()
@@ -83,8 +84,9 @@ def main(filename, bands=[1,1]):
     projout = Proj(init='epsg:4326')
     new_shape = []
     for point in shape:
-        pt = transform(projin, projout, point[0], point[1])
-        new_shape.append(pt)
+        pt = geoimg.geoloc(point[0], point[1])
+        geo_pt = transform(projin, projout, pt.x(), pt.y())
+        new_shape.append(geo_pt)
 
     # Convert shape points to geojson
     geojson = {
