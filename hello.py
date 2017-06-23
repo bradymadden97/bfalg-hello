@@ -1,80 +1,104 @@
-import create_shape as cs
+import gippy
+import json
 import math
 import random
 
-import gippy
-import os
-import tempfile
 from pyproj import Proj, transform
-from osgeo import gdal, osr
+from osgeo import osr
 from PIL import Image
 
-defaults = {
-    'minsize': 100.0,
-    'close': 5,
-    'simple': None,
-    'smooth': 0.0,
-}
+
+# Format values to 3 decimal points to avoid floating point errors
+def refine_value(val):
+    return float("{:.3f}".format(val)) + 0.0
 
 
-def open_image(filename, bands):
-    try:
-        geoimg = gippy.GeoImage(filename, True)
-        if geoimg.format()[0:3] == 'JP2':
-            geoimg = None
-            data_set = gdal.Open(filename)
-            fileout = os.path.splitext(filename)[0] + '.tif'
-            gdal.Translate(fileout, data_set, format='GTiff')
-            data_set = None
-            geoimg = gippy.GeoImage(fileout, True).select(bands)
-        #geoimg.set_bandnames(['green', 'nir'])
-        return geoimg
-    except Exception, e:
-        raise SystemExit()
+def create_shape(start_position, side_length=50.0):
+    # Select random number of sides on shape
+    shape_sides = random.randint(3, 9)
+
+    # Calculate inner angle of shape
+    shape_angle = math.radians(180 - float((360 / shape_sides)))
+
+    # Init
+    lines = [[start_position[0], start_position[1]]]
+    current_angle = shape_angle
+    flip = 1
+
+    for side in range(shape_sides):
+        # Calculate shape point based on previous point location
+        x = lines[-1][0] + side_length * math.cos(current_angle) * flip
+        y = lines[-1][1] + side_length * math.sin(current_angle) * flip
+
+        # Append new point to list
+        lines.append([refine_value(x), refine_value(y)])
+
+        # Increase angle to calculate next side
+        current_angle += shape_angle
+
+        # Toggle negation value for correct direction of side vectors
+        flip *= -1
+
+    # Return list of shape points
+    return lines
 
 
-def process(geoimg, minsize=defaults['minsize'], close=defaults['close'], simple=defaults['simple'],
-            smooth=defaults['smooth'], outdir='', bname=None):
-    if bname is None:
-        bname = geoimg.basename()
-    if outdir is None:
-        outdir = tempfile.mkdtemp()
-    prefix = os.path.join(outdir, bname)
+def points_to_geojson(points):
+    features = []
+    feature_setup = {
+        'type' : 'Feature',
+        'properties' : {
+            'source' : 'imagery'
+        }
+    }
+    features.append(feature_setup)
+    coord = []
+    for pt in points:
+        coord.append([pt[0], pt[1]])
+    features[0]['geometry'] =  {
+            'type' : 'LineString',
+            'coordinates' : coord
+        }
+    return features
 
-    fileout = prefix + '_hello.tif'
-    ref = osr.SpatialReference(geoimg.srs()).ExportToProj4()
-    proj_in = Proj(ref)
-    proj_out = Proj(init='epsg:4326')
-    newlines = []
 
-
-def main(filename, bands=[1, 1], minsize=defaults['minsize'], close=defaults['close'], simple=defaults['simple'],
-         smooth=defaults['smooth'], outdir='', bname=None):
-    geoimg = open_image(filename, bands)
-    size = Image.open(filename).size
-    if geoimg is None:
-        raise SystemExit()
-    if bname is None:
-        bname = geoimg.basename()
-
-    try:
-        geojson = process(geoimg, minsize=minsize, close=close, simple=simple, smooth=smooth, outdir=outdir,
-                          bname=bname)
-
-    except Exception, e:
-        raise SystemExit()
-
-def main(filename):
+def main(filename, bands=[1,1]):
+    # Open image
     img = Image.open(filename)
     img_size = img.size
+
+    # Make image GeoImage
+    geoimg = gippy.GeoImage(filename, True).select(bands)
+
     # Shape starting location in center 25% of image
     x_start = random.randint(img_size[0]*0.25, img_size[0]*0.75)
     y_start = random.randint(img_size[1]*0.25, img_size[1]*0.75)
-    points = cs.create_shape([x_start, y_start])
-    for point in points:
 
+    # Get shape points
+    shape = create_shape([x_start, y_start])
 
+    # Convert shape points to latitude-longitude
+    srs = osr.SpatialReference(geoimg.srs()).ExportToProj4()
+    projin = Proj(srs)
+    projout = Proj(init='epsg:4326')
+    new_shape = []
+    for point in shape:
+        pt = transform(projin, projout, point[0], point[1])
+        new_shape.append(pt)
 
+    # Convert shape points to geojson
+    geojson = {
+        'type' : 'FeatureCollection',
+        'features' : points_to_geojson(new_shape)
+    }
+
+    # Write geojson to a file
+    fileout = filename.split(".")[0] + ".geojson"
+    with open(fileout, 'w') as f:
+        f.write(json.dumps(geojson, indent=4))
+
+    # Return geojson
+    return geojson
 
 
 main("Qatar_R3C2.tif")
