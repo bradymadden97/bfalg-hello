@@ -1,10 +1,13 @@
 import create_shape as cs
+import math
+import random
 
 import gippy
 import os
 import tempfile
 from pyproj import Proj, transform
 from osgeo import gdal, osr
+from PIL import Image
 
 defaults = {
     'minsize': 100.0,
@@ -24,7 +27,7 @@ def open_image(filename, bands):
             gdal.Translate(fileout, data_set, format='GTiff')
             data_set = None
             geoimg = gippy.GeoImage(fileout, True).select(bands)
-        geoimg.set_bandnames(['green', 'nir'])
+        #geoimg.set_bandnames(['green', 'nir'])
         return geoimg
     except Exception, e:
         raise SystemExit()
@@ -39,17 +42,16 @@ def process(geoimg, minsize=defaults['minsize'], close=defaults['close'], simple
     prefix = os.path.join(outdir, bname)
 
     fileout = prefix + '_hello.tif'
-
     ref = osr.SpatialReference(geoimg.srs()).ExportToProj4()
     proj_in = Proj(ref)
     proj_out = Proj(init='epsg:4326')
     newlines = []
 
 
-
 def main(filename, bands=[1, 1], minsize=defaults['minsize'], close=defaults['close'], simple=defaults['simple'],
          smooth=defaults['smooth'], outdir='', bname=None):
     geoimg = open_image(filename, bands)
+    size = Image.open(filename).size
     if geoimg is None:
         raise SystemExit()
     if bname is None:
@@ -61,3 +63,18 @@ def main(filename, bands=[1, 1], minsize=defaults['minsize'], close=defaults['cl
 
     except Exception, e:
         raise SystemExit()
+
+def main(filename):
+    img = Image.open(filename)
+    img_size = img.size
+    # Shape starting location in center 25% of image
+    x_start = random.randint(img_size[0]*0.25, img_size[0]*0.75)
+    y_start = random.randint(img_size[1]*0.25, img_size[1]*0.75)
+    points = cs.create_shape([x_start, y_start])
+    for point in points:
+
+
+
+
+
+main("Qatar_R3C2.tif")
