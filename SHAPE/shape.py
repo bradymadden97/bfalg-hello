@@ -10,7 +10,6 @@ from osgeo import osr
 from PIL import Image
 
 
-
 def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', help="Input image (1 file)")
