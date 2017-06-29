@@ -1,5 +1,6 @@
 pyproj==1.9.5.1
+numpy==1.11.1
 gippy==1.0.0b3
 Pillow==4.1.1
 olefile==0.44
-numpy==1.11.1
+
