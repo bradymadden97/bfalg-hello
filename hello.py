@@ -4,7 +4,7 @@ import json
 import math
 import random
 import sys
-import version
+
 from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
@@ -15,7 +15,7 @@ def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', help="Input image (1 file)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
-    parser.add_argument('-v', '--version', help="Return version", action='version', version=str(version.v))
+    parser.add_argument('-v', '--version', help="Return version", action='version', version="1.0")
 
     return parser.parse_args(args)
 
