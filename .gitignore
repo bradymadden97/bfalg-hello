@@ -1,5 +1,6 @@
 *.geojson
 *.tif
+*.TIF
 *.pyc
 .idea/*
 venv
