@@ -46,8 +46,8 @@ def open_image(filename, bands):
 
 def init_shape(img_size):
     # Shape starting location in center 25% of image
-    x_start = random.randint(img_size[0] * 0.25, img_size[0] * 0.75)
-    y_start = random.randint(img_size[1] * 0.25, img_size[1] * 0.75)
+    x_start = random.randint(int(img_size[0] * 0.25), int(img_size[0] * 0.75))
+    y_start = random.randint(int(img_size[1] * 0.25), int(img_size[1] * 0.75))
 
     # Get shape points with side length 10% of image size
     side_len = min(img_size[0] * 0.1, img_size[1] * 0.1)
