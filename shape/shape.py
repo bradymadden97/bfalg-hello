@@ -22,6 +22,7 @@ import sys
 from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
+Image.MAX_IMAGE_PIXELS = 1000000000
 
 
 def parse_args(args):
