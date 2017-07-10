@@ -1,14 +1,9 @@
 name: bfalg-shape
 channels:
-    - conda-forge
 dependencies:
-    - six=1.10.0
-    - pyproj=1.9.5.1
-    - Pillow=4.2.0
-    - olefile=0.44
-    - numpy=1.13.0
-    - pyglet=1.1.4
+    - numpy
+    - pillow
+    - pyproj
     - pip:
-      - git+https://github.com/gipit/gippy.git@v1.0.0
-      - eyeD3==0.8
-      - OSR==0.0.1
+      - eyed3
+      - gippy

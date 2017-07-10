@@ -1,0 +1,6 @@
+version: '2'
+services:
+  pzsvc-build:
+    build: .
+    volumes:
+     - ./out:/root/built-repo
