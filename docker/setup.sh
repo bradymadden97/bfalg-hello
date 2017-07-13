@@ -12,3 +12,4 @@ pip install -d vendor gippy
 
 pwd
 ls
+python --version
