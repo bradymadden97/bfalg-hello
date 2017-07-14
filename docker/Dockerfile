@@ -15,5 +15,6 @@ RUN yum -y install epel-release && yum -y update &&\
     conda config --add channels bioconda
 
 ADD setup.sh setup.sh
+ADD conda-recipes/ conda-recipes/
 
 CMD ["/bin/bash", "setup.sh"]
