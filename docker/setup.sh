@@ -6,4 +6,5 @@ echo "#############################"
 pwd
 ls
 cd built-repo
+echo Whats in built-repo
 ls
