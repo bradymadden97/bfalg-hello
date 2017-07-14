@@ -9,6 +9,7 @@ RUN yum -y install epel-release && yum -y update &&\
     curl -L https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -o miniconda.sh &&\
     /usr/bin/bash miniconda.sh -b -p $HOME/miniconda2 &&\
     rm miniconda.sh &&\
+    export PATH="$HOME/miniconda2/bin:$PATH" &&\
     conda install conda-build
 
 ADD setup.sh setup.sh
