@@ -10,6 +10,9 @@ mkdir -p built-repo/conda-recipes/vendor
 cd built-repo/conda-recipes/vendor
 git clone https://github.com/gipit/gippy
 cd ..
+pwd
+ls
+ls vendor
 conda build gippy
 
 echo
