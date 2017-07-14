@@ -2,6 +2,7 @@ mkdir vendor
     
 export PATH="$HOME/miniconda2/bin:$PATH"
 
+pwd
 cd /
 find | grep environment.yml
 
