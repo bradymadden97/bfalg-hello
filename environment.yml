@@ -5,7 +5,9 @@ dependencies:
   - numpy
   - pillow
   - pyproj
-  - gdal
+  - libagg=2.5.0
+  - fiona=1.7.4
+  - gdal=2.1.3
+  - gippy  
   - pip:
     - eyed3
-    - gippy
