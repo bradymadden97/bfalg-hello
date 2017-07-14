@@ -1,9 +1,11 @@
 name: bfalg-shape
 channels:
+  - conda-forge
 dependencies:
-    - numpy
-    - pillow
-    - pyproj
-    - pip:
-      - eyed3
-      - gippy
+  - numpy
+  - pillow
+  - pyproj
+  - gdal
+  - pip:
+    - eyed3
+    - gippy
