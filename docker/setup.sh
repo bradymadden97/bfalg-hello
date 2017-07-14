@@ -11,3 +11,5 @@ conda build agg
 conda config --add channels local
 conda build pypotrace
 conda build gippy
+echo
+echo ~/miniconda2/conda-bld
