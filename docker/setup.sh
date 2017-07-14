@@ -2,13 +2,13 @@ mkdir vendor
     
 export PATH="$HOME/miniconda2/bin:$PATH"
 
-pwd
-cd /
-find | grep environment.yml
+#pwd
+#cd /
+#find | grep environment.yml
 
 
 ls
-conda env create -f environment.yml
+conda env create -f built-repo/environment.yml
 echo
 pwd
 ls
