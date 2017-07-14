@@ -6,9 +6,12 @@ export PATH="$HOME/miniconda2/bin:$PATH"
 #cd /
 #find | grep environment.yml
 
+mkdir -p built-repo/vendor
+cd built-repo/vendor
+git clone https://github.com/gipit/gippy
+cd ..
+conda build gippy
 
-ls
-conda env create -f built-repo/environment.yml
 echo
 pwd
 ls
