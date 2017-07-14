@@ -4,6 +4,10 @@ echo "#############################"
 pwd
 ls
 cd conda-recipes
+cd vendor
+git clone https://github.com/gipit/gippy
+git clone https://github.com/flupke/pypotrace
+cd ..
 pwd
 ls
 conda update -n root conda-build -y
