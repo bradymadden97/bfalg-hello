@@ -7,12 +7,7 @@ cd conda-recipes
 cd vendor
 git clone https://github.com/gipit/gippy
 git clone https://github.com/flupke/pypotrace
-pwd
-ls
-exit 1
 cd ..
-pwd
-ls
 conda update -n root conda-build -y
 #conda update --all -y
 conda build agg
