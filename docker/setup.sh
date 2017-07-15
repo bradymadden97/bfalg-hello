@@ -20,6 +20,6 @@ conda build pypotrace > /dev/null
 echo Building gippy
 conda build gippy > /dev/null
 cd ..
-cp -r ~/miniconda2/conda-bld /root/built-repo
+cp -r ~/miniconda2/conda-bld/* /root/built-repo
 pwd
 ls
