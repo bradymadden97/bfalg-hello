@@ -20,3 +20,5 @@ conda build pypotrace > /dev/null
 echo Building gippy
 conda build gippy > /dev/null
 cp -r ~/miniconda2/conda-bld ~/conda-repo
+pwd
+ls
