@@ -1,0 +1,10 @@
+{
+  "port":9500,
+  "routing":{
+    "version":{
+      "GET": {
+        "cmd":"python shape/shape.py -v"
+      }
+    }
+  }
+}
