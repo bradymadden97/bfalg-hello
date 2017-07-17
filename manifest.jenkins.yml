@@ -1,0 +1,11 @@
+applications:
+- name: bfalg-shape
+  host: bfalg-shape
+  health_check_type: none
+  memory: 1G
+  timeout: 100
+  disk_quota: 2G
+  instances: 1
+  buildpack: https://github.com/cloudfoundry/buildpack-python.git
+  env:
+PATH: "/home/vcap/app/.conda/envs/dep_env/bin:/bin:/usr/bin"
