@@ -1,5 +1,0 @@
-numpy
-eyeD3
-Pillow
-pyproj
-gippy
