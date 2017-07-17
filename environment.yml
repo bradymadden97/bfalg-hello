@@ -1,6 +1,6 @@
 name: bfalg-shape
 channels:
-  - $LOCAL_CHANNEL
+  - CHANNEL
   - conda-forge
   - bioconda
   - defaults
