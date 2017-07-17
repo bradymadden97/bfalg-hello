@@ -1,6 +1,6 @@
 name: bfalg-shape
 channels:
-  - https://proxy:proxy@nexus.devops.geointservices.io/content/sites/beachfront-conda/conda-bld
+  - $LOCAL_CHANNEL
   - conda-forge
   - bioconda
   - defaults
@@ -15,4 +15,4 @@ dependencies:
     - gdal=2.1.3
     - gippy
     - pip:
-      - eyed3
+	- eyed3
