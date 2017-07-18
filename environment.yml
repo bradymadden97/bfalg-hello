@@ -5,6 +5,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
+    - conda=4.3.22
     - numpy
     - potrace
     - pypotrace
