@@ -6,6 +6,6 @@ applications:
   timeout: 100
   disk_quota: 2G
   instances: 1
-  buildpack: binary_buildpack
+  buildpack: https://github.com/cloudfoundry/python-buildpack.git
   env:
     PATH: "/home/vcap/app/.conda/envs/dep_env/bin:/bin:/usr/bin"
