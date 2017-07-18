@@ -1,7 +1,7 @@
 applications:
-- name: bfalg-shape
-  host: bfalg-shape
-  command: ls && /bin/bash setup.sh && ./pz-flex
+- name: dep_env
+  host: dep_env
+  command: /bin/bash setup.sh && ./pz-flex
   health_check_type: none
   memory: 1G
   timeout: 100
@@ -9,4 +9,4 @@ applications:
   instances: 1
   buildpack: https://github.com/cloudfoundry/python-buildpack.git
   env:
-    PATH: "/home/vcap/app/.conda/envs/dep_env/bin:/bin:/usr/bin:/home/vcap/app/.cloudfoundry/0/conda/bin/"
+    PATH: "/bin:/usr/bin:/home/vcap/app/.cloudfoundry/0/conda/bin/"
