@@ -1,7 +1,7 @@
 applications:
 - name: bfalg-shape
   host: bfalg-shape
-  command: /bin/bash setup.sh && ./pz-flex
+  command: ls && /bin/bash setup.sh && ./pz-flex
   health_check_type: none
   memory: 1G
   timeout: 100
