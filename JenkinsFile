@@ -19,10 +19,9 @@ node {
     }
     def appvers = ""
     dir("bfalg-shape") {
-        appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true)
+        appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
     }
-    appvers = appvers.trim()
-    def appName = "bfalg-shape"
+    def appName = "bfalg-shape-${appvers}"
 
 if(false){
     stage("Build Alg") {
@@ -97,13 +96,13 @@ if(false){
                   cf restage ${appName}
                 """
 
-                //try {
+                try {
                   sh "cf start ${appName}"
-                //} catch (Exception e) {
-                  //sh "cf logs --recent ${appName}"
-                  //sh "cf delete ${appName} -f"
-                  //error("Error during application start. Deleting ${appName} and failing the build.")
-                //}
+                } catch (Exception e) {
+                  sh "cf logs --recent ${appName}"
+                  sh "cf delete ${appName} -f"
+                  error("Error during application start. Deleting ${appName} and failing the build.")
+                }
                 sh """
                   cf api ${env.PCF_API_ENDPOINT}
                   cf auth ${CFUSER} ${CFPASS}
