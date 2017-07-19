@@ -11,7 +11,7 @@ dependencies:
     - pillow
     - pyproj
     - libagg=2.5.0
-#    - fiona=1.7.4
+    - fiona=1.7.4
     - gdal=2.1.0
     - gippy
     - pip:
