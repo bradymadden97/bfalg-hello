@@ -1,7 +1,7 @@
 name: bfalg-shape
 channels:
   - https://conda-channel.int.geointservices.io
-  - conda-forge
+#  - conda-forge
   - bioconda
   - defaults
 dependencies:
