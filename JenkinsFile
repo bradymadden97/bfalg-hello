@@ -55,10 +55,6 @@ if(false){
           cp bfalg-shape/config.json .
           cp bfalg-shape/environment.yml .
           rm -rf bfalg-shape*
-          git clone https://github.com/venicegeo/wh-sandbox channel
-          rm -rf channel/.git
-          rm channel/LICENSE
-          rm channel/.gitignore
         """
 
         def archiveName="bfalg-shape.tgz"
