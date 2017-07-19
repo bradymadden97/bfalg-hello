@@ -4,7 +4,8 @@ conda config --add channels conda-forge
 echo Adding bioconda
 conda config --add channels bioconda
 echo Adding local channel
-conda config --add channels file://$wd/channel
+#file://$wd/channel
+conda config --add channels https://conda-channel.int.geointservices.io/
 echo Installing numpy...
 conda install numpy -y > /dev/null
 echo Installing potrace...
