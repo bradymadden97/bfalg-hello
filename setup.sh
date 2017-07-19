@@ -1,18 +1,27 @@
-#!/bin/bash
 wd=`pwd`
-git clone https://github.com/venicegeo/wh-sandbox
-conda create -n bfalg-shape -y
-source activate bfalg-shape
+echo Adding conda-forge
 conda config --add channels conda-forge
+echo Adding bioconda
 conda config --add channels bioconda
-conda config --add channels file://$wd/wh-sandbox
-conda install numpy -y
-conda install potrace -y
-conda install pypotrace -y
-conda install pillow -y
-conda install pyproj -y
-conda install libagg=2.5.0 -y
-conda install fiona=1.7.4 -y
-conda install gippy -y
-pip install eyed3
+echo Adding local channel
+conda config --add channels file://$wd/channel
+echo Installing numpy...
+conda install numpy -y > /dev/null
+echo Installing potrace...
+conda install potrace -y > /dev/null
+echo Installing pypotrace...
+conda install pypotrace -y > /dev/null
+echo Installing pillow...
+conda install pillow -y > /dev/null
+echo Installing pyproj...
+conda install pyproj -y > /dev/null
+echo Installing libagg...
+conda install libagg=2.5.0 -y > /dev/null
+echo Installing fiona...
+conda install fiona=1.7.4 -y > /dev/null
+echo Installing gippy...
+conda install gippy -y > /dev/null
+echo Installing eyed3...
+pip install eyed3 > /dev/null
+rm -rf channel
 python shape/shape.py -v
