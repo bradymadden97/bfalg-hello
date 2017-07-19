@@ -1,6 +1,6 @@
 applications:
-- name: dep_env
-  host: dep_env
+- name: bfalg-shape
+  host: bfalg-shape
   command: /bin/bash setup.sh && ./pz-flex
   health_check_type: none
   memory: 1G
