@@ -92,7 +92,7 @@ if(false){
                   cf push ${appName} -f manifest.jenkins.yml --hostname ${appName} -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start -u none
                   cf set-env ${appName} SPACE ${env.PHASE_ONE_PCF_SPACE}
                   cf set-env ${appName} DOMAIN ${env.PHASE_ONE_PCF_DOMAIN}
-                  cf set-env ${appName} LD_LIBRARY_PATH /home/vcap/app/.cloudfoundry/0/conda/envs/dep_env/lib:/home/vcap/app/.cloudfoundry/0/conda/lib:/home/vcap/app/lib
+                  cf set-env ${appName} PATH /home/vcap/app/.conda/envs/dep_env/bin:/bin:/usr/bin
                   cf restage ${appName}
                 """
 
