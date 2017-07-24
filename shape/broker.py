@@ -14,14 +14,16 @@
 
 from urllib2 import urlopen
 import urllib
+import uuid
 import io
 from PIL import Image
 Image.MAX_IMAGE_PIXELS = 1000000000
 
 
 def get_image_from_url(url):
-    fn = url.split("/")[-1]
-    urllib.urlretrieve(url, fn)
+    u = url.rstrip("\"").lstrip("\"")
+    fn = str(uuid.uuid4() + "-" + url.split("/")[-1])
+    urllib.urlretrieve(u, fn)
     img = Image.open(fn)
     img_size = img.size
     return fn, img_size
