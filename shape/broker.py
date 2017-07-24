@@ -20,6 +20,7 @@ Image.MAX_IMAGE_PIXELS = 1000000000
 
 
 def get_image_from_url(url):
+    url.rstrip("\"").lstrip("\"")
     fn = url.split("/")[-1]
     urllib.urlretrieve(url, fn)
     img = Image.open(fn)
