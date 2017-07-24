@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from urllib2 import urlopen
 from urllib import urlretrieve
 import uuid
-import io
 from PIL import Image
 Image.MAX_IMAGE_PIXELS = 1000000000
 
 
 def get_image_from_url(url):
-    u = url.strip('\'"')
+    u_array = url.strip('\"').split("://")
+    u_array[0] = u_array[0].replace("https", "http")
+    u = "://".join(u_array)
     fn = str(uuid.uuid4()) + "-" + url.split("/")[-1]
     urlretrieve(u, fn)
     img = Image.open(fn)
