@@ -6,5 +6,10 @@
         "cmd":"python shape/shape.py -v"
       }
     }
+    "help":{
+      "GET": {
+        "cmd":"python shape/shape.py -h"
+      }
+    }
   }
 }
