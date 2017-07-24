@@ -40,17 +40,29 @@ def parse_args(args):
 
 
 def get_image_from_url(url):
+    # Get image from url
+    print str("Getting image from: " + url)
     u_array = url.strip('\"').split("://")
+    # HACK HACK HACK HACK HACK HACK HACK fixing ssl error
     u_array[0] = u_array[0].replace("https", "http")
     u = "://".join(u_array)
+    # END HACK
+
+    # Generate uuid to save image
     fn = str(uuid.uuid4()) + "-" + url.split("/")[-1]
     urlretrieve(u, fn)
+
+    # Get image dimensions
     img = Image.open(fn)
     img_size = img.size
     return fn, img_size
 
 
 def get_image_from_file(filename):
+    # Get image from file
+    print str("Getting image from: " + filename)
+
+    # Get image dimensions
     img = Image.open(filename)
     img_size = img.size
     return filename, img_size
@@ -58,6 +70,7 @@ def get_image_from_file(filename):
 
 def convert_image(filename, bands):
     # Convert to GeoImage
+    print("Image downloaded")
     geoimg = gippy.GeoImage(filename, True).select(bands)
 
     return geoimg
@@ -157,6 +170,7 @@ def main(fn, img_size, bands=[1, 1]):
     # Shape construction
     x, y, length = init_shape(img_size)
     shape = create_shape([x, y], length)
+    print("Shape created")
 
     # Convert shape to relative latitude-longitude coordinates
     geo_shape = convert_latlon(geoimg, shape)
@@ -172,6 +186,9 @@ def main(fn, img_size, bands=[1, 1]):
 
     # Delete image file
     os.remove(fn)
+
+    # Flush old stdout
+    sys.stdout.flush()
 
     # Print geojson to stdout
     print(geojson)
