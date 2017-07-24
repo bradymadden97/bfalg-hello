@@ -79,6 +79,17 @@ if(false){
         if(!fileExists('.cf')) {
             sh "mkdir -p .cf"
         }
+        def piazza_api_key = ""
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${params.BEACHFRONT_PIAZZA_AUTH}", usernameVariable: 'TOKEN', passwordVariable: 'unused']]) {
+            def keyCurl = sh(script: """curl -s https://piazza.${env.PHASE_ONE_PCF_SPACE}.${env.PIAZZA_URL}/v2/key -u \"${TOKEN}:\"""", returnStdout: true)
+            piazza_api_key = sh(script: """echo \"${keyCurl}\"|grep -oE '\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}'""", returnStdout: true).trim()
+            sh """
+              if [ -z $piazza_api_key ]; then
+                echo "No Piazza API key found"
+                exit 1
+              fi
+            """
+        }
         withEnv([
           "CF_HOME=.cf"
         ]) {
@@ -92,6 +103,7 @@ if(false){
                   cf push ${appName} -f manifest.jenkins.yml --hostname ${appName} -d ${env.PHASE_ONE_PCF_DOMAIN} --no-start -u none
                   cf set-env ${appName} SPACE ${env.PHASE_ONE_PCF_SPACE}
                   cf set-env ${appName} DOMAIN ${env.PHASE_ONE_PCF_DOMAIN}
+                  cf set-env ${appName} PIAZZA_API_KEY $piazza_api_key
                   cf set-env ${appName} PATH /home/vcap/app/.conda/envs/dep_env/bin:/bin:/usr/bin
                   cf restage ${appName}
                 """
