@@ -24,7 +24,7 @@ import uuid
 from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
-from urllib import urlretrieve
+import requests
 
 Image.MAX_IMAGE_PIXELS = 1000000000
 
@@ -40,28 +40,28 @@ def parse_args(args):
 
 
 def get_image_from_url(url):
-    # Get image from url
-    print str("Getting image from: " + url)
-    u_array = url.strip('\"').split("://")
-    # HACK HACK HACK HACK HACK HACK HACK fixing ssl error
-    u_array[0] = u_array[0].replace("https", "http")
-    u = "://".join(u_array)
-    # END HACK
+    u = url.strip('\"')
 
-    # Generate uuid to save image
-    fn = str(uuid.uuid4()) + "-" + url.split("/")[-1]
-    urlretrieve(u, fn)
+    # Generate unique filename
+    fn = str(uuid.uuid4()) + "-" + u.split("/")[-1]
 
-    # Get image dimensions
-    img = Image.open(fn)
-    img_size = img.size
+    # Write image to file
+    with open(fn, 'wb') as img:
+        resp = requests.get(u)
+        if not resp.ok:
+            exit(3)
+        for blk in resp.iter_content(1024):
+            if not blk:
+                break
+            img.write(blk)
+
+    # Get image size
+    image = Image.open(fn)
+    img_size = image.size
     return fn, img_size
 
 
 def get_image_from_file(filename):
-    # Get image from file
-    print str("Getting image from: " + filename)
-
     # Get image dimensions
     img = Image.open(filename)
     img_size = img.size
@@ -70,7 +70,6 @@ def get_image_from_file(filename):
 
 def convert_image(filename, bands):
     # Convert to GeoImage
-    print("Image downloaded")
     geoimg = gippy.GeoImage(filename, True).select(bands)
 
     return geoimg
@@ -170,7 +169,6 @@ def main(fn, img_size, bands=[1, 1]):
     # Shape construction
     x, y, length = init_shape(img_size)
     shape = create_shape([x, y], length)
-    print("Shape created")
 
     # Convert shape to relative latitude-longitude coordinates
     geo_shape = convert_latlon(geoimg, shape)
