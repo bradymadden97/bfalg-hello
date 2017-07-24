@@ -155,8 +155,8 @@ def main(fn, img_size, bands=[1, 1]):
     # Delete image file
     os.remove(fn)
 
-    # Return geojson
-    return geojson
+    # Print geojson to stdout
+    print(geojson)
 
 
 args = parse_args(sys.argv[1:])
