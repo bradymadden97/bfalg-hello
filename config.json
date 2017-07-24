@@ -5,7 +5,15 @@
       "GET": {
         "cmd":"python shape/shape.py -v"
       }
-    }
+    },
+    "execute":{
+      "POST":{
+        "cmd":"python shape/shape.py",
+        "body": {
+          "u":""
+        }
+      }
+    },
     "help":{
       "GET": {
         "cmd":"python shape/shape.py -h"
