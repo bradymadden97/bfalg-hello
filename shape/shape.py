@@ -19,12 +19,13 @@ import math
 import random
 import sys
 import os
+import uuid
 
 from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
+from urllib import urlretrieve
 
-import broker
 Image.MAX_IMAGE_PIXELS = 1000000000
 
 
@@ -36,6 +37,23 @@ def parse_args(args):
     parser.add_argument('-v', '--version', help="Return version", action='version', version="1.0")
 
     return parser.parse_args(args)
+
+
+def get_image_from_url(url):
+    u_array = url.strip('\"').split("://")
+    u_array[0] = u_array[0].replace("https", "http")
+    u = "://".join(u_array)
+    fn = str(uuid.uuid4()) + "-" + url.split("/")[-1]
+    urlretrieve(u, fn)
+    img = Image.open(fn)
+    img_size = img.size
+    return fn, img_size
+
+
+def get_image_from_file(filename):
+    img = Image.open(filename)
+    img_size = img.size
+    return filename, img_size
 
 
 def convert_image(filename, bands):
@@ -161,8 +179,8 @@ def main(fn, img_size, bands=[1, 1]):
 
 args = parse_args(sys.argv[1:])
 if args.url:
-    f, size = broker.get_image_from_url(args.url)
+    f, size = get_image_from_url(args.url)
     main(f, size)
 elif args.file:
-    f, size = broker.get_image_from_file(args.file)
+    f, size = get_image_from_file(args.file)
     main(f, size)
