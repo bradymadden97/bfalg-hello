@@ -12,4 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = '1.0'
+from urllib2 import urlopen
+import urllib
+import io
+from PIL import Image
+Image.MAX_IMAGE_PIXELS = 1000000000
+
+
+def get_image_from_url(url):
+    fn = url.split("/")[-1]
+    urllib.urlretrieve(url, fn)
+    img = Image.open(fn)
+    img_size = img.size
+    return fn, img_size
+
+
+def get_image_from_file(filename):
+    img = Image.open(filename)
+    img_size = img.size
+    return filename, img_size

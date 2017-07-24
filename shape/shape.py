@@ -22,27 +22,26 @@ import sys
 from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
+
+import broker
 Image.MAX_IMAGE_PIXELS = 1000000000
 
 
 def parse_args(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input', help="Input image (1 file)")
+    parser.add_argument('-u', '--url', help="Input image url (1 image)")
+    parser.add_argument('-f', '--file', help="Input image file (1 image)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
     parser.add_argument('-v', '--version', help="Return version", action='version', version="1.0")
 
     return parser.parse_args(args)
 
 
-def open_image(filename, bands):
-    # Open image
-    img = Image.open(filename)
-    img_size = img.size
-
+def convert_image(filename, bands):
     # Convert to GeoImage
     geoimg = gippy.GeoImage(filename, True).select(bands)
 
-    return geoimg, img_size
+    return geoimg
 
 
 def init_shape(img_size):
@@ -132,9 +131,9 @@ def process_fileout(filename, geojson):
         f.write(json.dumps(geojson, indent=4))
 
 
-def main(filename, bands=[1, 1]):
+def main(fn, img_size, bands=[1, 1]):
     # Process file
-    geoimg, img_size = open_image(filename, bands)
+    geoimg = convert_image(fn, bands)
 
     # Shape construction
     x, y, length = init_shape(img_size)
@@ -150,12 +149,16 @@ def main(filename, bands=[1, 1]):
     }
 
     # Write geojson to a file
-    process_fileout(filename, geojson)
+    process_fileout(fn, geojson)
 
     # Return geojson
     return geojson
 
 
 args = parse_args(sys.argv[1:])
-if args.input:
-    main(args.input)
+if args.url:
+    f, size = broker.get_image_from_url(args.url)
+    main(f, size)
+elif args.file:
+    f, size = broker.get_image_from_file(args.file)
+    main(f, size)
