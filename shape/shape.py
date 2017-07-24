@@ -18,6 +18,7 @@ import json
 import math
 import random
 import sys
+import os
 
 from pyproj import Proj, transform
 from osgeo import osr
@@ -150,6 +151,9 @@ def main(fn, img_size, bands=[1, 1]):
 
     # Write geojson to a file
     process_fileout(fn, geojson)
+
+    # Delete image file
+    os.remove(fn)
 
     # Return geojson
     return geojson
