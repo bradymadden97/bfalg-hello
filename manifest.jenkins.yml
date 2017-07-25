@@ -1,7 +1,7 @@
 applications:
 - name: bfalg-shape
   host: bfalg-shape
-  command: chmod 755 && ./pzsvc-exec pzsvc-exec.config
+  command: ls && chmod 755 && ./pzsvc-exec pzsvc-exec.config
   health_check_type: none
   memory: 1G
   timeout: 100
