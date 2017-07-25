@@ -9,12 +9,12 @@ node {
     stage("Setup") {
         deleteDir()
         sh "mkdir -p bfalg-shape"
-        sh "mkdir -p ${root}/gopath/src/pz-flex"
+        sh "mkdir -p ${root}/gopath/src/github.com/venicegeo/pzsvc-exec"
         dir("bfalg-shape") {
             git url: "https://github.com/venicegeo/bfalg-shape", branch: "master"
         }
-        dir("gopath/src/pz-flex") {
-            git url: "https://github.com/venicegeo/pz-flex", branch: "master"
+        dir("gopath/src/github.com/venicegeo/pzsvc-exec") {
+            git url: "https://github.com/venicegeo/pzsvc-exec", branch: "master"
         }
     }
     def appvers = ""
@@ -32,27 +32,27 @@ if(false){
             """
         }
     }}
-    stage("Build Flex") {
+    stage("Build Exec") {
         withEnv([
           "PATH+=${golangTool}/bin:${root}/gopath/bin",
           "GOROOT=${golangTool}",
           "GOPATH=${root}/gopath"
         ]) {
             sh """
-              cd ${root}/gopath/src/pz-flex
+              cd ${root}/gopath/src/github.com/venicegeo/pzsvc-exec
               go build
             """
         }
     }
     stage("Archive") {
         sh """
-          cp gopath/src/pz-flex/pz-flex .
-          cp gopath/src/pz-flex/Procfile .
+          cp gopath/src/github.com/venicegeo/pzsvc-exec/pzsvc-exec .
           rm -rf gopath
           cp -r bfalg-shape/shape .
           cp bfalg-shape/manifest.jenkins.yml .
-          cp bfalg-shape/config.json .
+          cp bfalg-shape/pzsvc-exec.config .
           cp bfalg-shape/environment.yml .
+          cp bfalg-shape/Procfile .
           rm -rf bfalg-shape*
         """
 
@@ -80,8 +80,9 @@ if(false){
             sh "mkdir -p .cf"
         }
         def piazza_api_key = ""
+        def piazza_url = "https://piazza.${env.PHASE_ONE_PCF_SPACE}.${env.PIAZZA_URL}"
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${params.BEACHFRONT_PIAZZA_AUTH}", usernameVariable: 'TOKEN', passwordVariable: 'unused']]) {
-            def keyCurl = sh(script: """curl -s https://piazza.${env.PHASE_ONE_PCF_SPACE}.${env.PIAZZA_URL}/v2/key -u \"${TOKEN}:\"""", returnStdout: true)
+            def keyCurl = sh(script: """curl -s ${piazza_url}/v2/key -u \"${TOKEN}:\"""", returnStdout: true)
             piazza_api_key = sh(script: """echo \"${keyCurl}\"|grep -oE '\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}'""", returnStdout: true).trim()
             sh """
               if [ -z $piazza_api_key ]; then
@@ -104,7 +105,8 @@ if(false){
 } --no-start -u none
                   cf set-env ${appName} SPACE ${env.PHASE_ONE_PCF_SPACE}
                   cf set-env ${appName} DOMAIN ${env.PHASE_ONE_PCF_DOMAIN}
-                  cf set-env ${appName} PIAZZA_API_KEY $piazza_api_key
+                  cf set-env ${appName} PZ_API_KEY ${piazza_api_key}
+                  cf set-env ${appName} PZ_ADDR ${piazza_url}
                   cf set-env ${appName} PATH /home/vcap/app/.conda/envs/dep_env/bin:/bin:/usr/bin
                   cf restage ${appName}
                 """
@@ -112,7 +114,7 @@ if(false){
                 try {
                   sh "cf start ${appName}"
                 } catch (Exception e) {
-                  sh "cf logs --recent ${appName}"
+                  //sh "cf logs --recent ${appName}"
                   sh "cf delete ${appName} -f"
                   error("Error during application start. Deleting ${appName} and failing the build.")
                 }
