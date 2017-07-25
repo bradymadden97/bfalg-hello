@@ -1,1 +1,1 @@
-ls && chmod 755 pzsvc-exec && ./pzsvc-exec pzsvc-exec.config
+web: ls && chmod 755 pzsvc-exec && ./pzsvc-exec pzsvc-exec.config
