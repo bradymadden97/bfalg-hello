@@ -20,6 +20,8 @@ import random
 import sys
 import os
 import uuid
+import tempfile
+import logging
 
 from pyproj import Proj, transform
 from osgeo import osr
@@ -189,8 +191,15 @@ def main(fn, img_size, bands=[1, 1]):
     # Flush old stdout
     sys.stdout.flush()
 
-    # Print geojson to stdout
-    # print(geojson)
+    # Log geojson to stderr
+    logging.error(geojson)
+
+    # Make tempfolder for geojson file
+    fout = os.path.join(tempfile.mkdtemp(), "shape.geojson")
+
+    # Save geojson file
+    with open(fout, 'w') as f:
+        f.write(json.dumps(geojson))
 
     # Return geojson
     return geojson
