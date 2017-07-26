@@ -1,1 +1,1 @@
-web: ./pzsvc-exec pzsvc-exec.config
+web: chmod 755 /home/vcap/app/pzsvc-exec && /home/vcap/app/pzsvc-exec pzsvc-exec.config
