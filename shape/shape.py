@@ -35,7 +35,7 @@ logging.error(sys.argv)
 
 def define_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-u', '--url', help="Input image url (1 image)", default='')
+    parser.add_argument('-u', '--url', help="Input image url (1 image)")
     parser.add_argument('-f', '--file', help="Input image file (1 image)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
     parser.add_argument('-v', '--version', help="Return version", action='version', version=__version__)
@@ -206,6 +206,7 @@ def main(fn, img_size, bands=[1, 1]):
 
 
 args = define_arguments()
+logging.error(args)
 if args.url:
     logging.error(args.url)
     f, size = get_image_from_file(args.url[0])
