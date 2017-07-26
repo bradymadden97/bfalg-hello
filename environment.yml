@@ -1,8 +1,8 @@
 name: dep_env
 channels:
   - conda-forge
-  - bioconda		
-  - coastline		
+  - bioconda
+  - coastline
   - defaults
 dependencies:
     - numpy=1.12.0
