@@ -31,7 +31,6 @@ import requests
 Image.MAX_IMAGE_PIXELS = 1000000000
 __version__ = "1.0"
 
-logging.error(sys.argv)
 
 def define_arguments():
     parser = argparse.ArgumentParser()
@@ -39,7 +38,7 @@ def define_arguments():
     parser.add_argument('-f', '--file', help="Input image file (1 image)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
     parser.add_argument('-v', '--version', help="Return version", action='version', version=__version__)
-    return parser.parse_known_args()
+    return parser.parse_known_args()[0]
 
 
 def get_image_from_url(url):
@@ -206,11 +205,9 @@ def main(fn, img_size, bands=[1, 1]):
 
 
 args = define_arguments()
-logging.error(args)
 if args.url:
-    logging.error(args.url)
-    f, size = get_image_from_file(args.url[0])
+    f, size = get_image_from_url(args.url)
     main(f, size)
 elif args.file:
-    f, size = get_image_from_file(args.file[0])
+    f, size = get_image_from_file(args.file)
     main(f, size)
