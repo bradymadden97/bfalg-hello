@@ -1,1 +1,1 @@
-web: chmod 755 pzsvc-exec && ./pzsvc-exec pzsvc-exec.config
+web: ./pzsvc-exec pzsvc-exec.config
