@@ -39,8 +39,7 @@ def define_arguments():
     parser.add_argument('-f', '--file', help="Input image file (1 image)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
     parser.add_argument('-v', '--version', help="Return version", action='version', version=__version__)
-    a = parser.parse_args()
-    return a
+    return parser.parse_known_args()
 
 
 def get_image_from_url(url):
