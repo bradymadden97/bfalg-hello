@@ -1,12 +1,14 @@
 # bfalg-shape
 
-### Building:
+## Building:
+_to do_
 
-### Writing your pzsvc-exec.config file:
+
+## Writing your pzsvc-exec.config file:
 * CliCmd is executed within a subfolder within pzsvc-exec, so the path to your algorithm should be proceeded by ` ../ `
 * VersionCmd is not executed within a subfolder within pzsvc-exec, so the path to your algorithm stays as it looks in your app
 
-### Registering with pzsvc-exec:
+## Registering with pzsvc-exec:
 * Your algorithm repo should be located inside the pzsvc-exec directory
 * pzsvc-exec.config should also be located inside the pzsvc-exec directory
 ```
@@ -16,7 +18,7 @@ go build
 ./pzsvc-exec pzsvc-exec.config
 ```
 
-### Running a piazza job with your algorithm:
+## Running a piazza job with your algorithm:
 * An example job creation cURL command for bfalg-shape would look like:
 ```
 POST to https://piazza.int.geointservices.io/job
