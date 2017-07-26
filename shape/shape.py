@@ -27,6 +27,7 @@ from PIL import Image
 import requests
 
 Image.MAX_IMAGE_PIXELS = 1000000000
+__version__ = "1.0"
 
 
 def parse_args(args):
@@ -34,7 +35,7 @@ def parse_args(args):
     parser.add_argument('-u', '--url', help="Input image url (1 image)")
     parser.add_argument('-f', '--file', help="Input image file (1 image)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
-    parser.add_argument('-v', '--version', help="Return version", action='version', version="1.0")
+    parser.add_argument('-v', '--version', help="Return version", action='version', version=__version__)
 
     return parser.parse_args(args)
 
@@ -189,7 +190,10 @@ def main(fn, img_size, bands=[1, 1]):
     sys.stdout.flush()
 
     # Print geojson to stdout
-    print(geojson)
+    # print(geojson)
+
+    # Return geojson
+    return geojson
 
 
 args = parse_args(sys.argv[1:])
