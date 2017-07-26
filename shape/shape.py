@@ -207,7 +207,10 @@ def main(fn, img_size, bands=[1, 1]):
 
 args = parse_args(sys.argv[1:])
 if args.url:
-    f, size = get_image_from_url(args.url)
+    if(type(args.url) is list):
+        f, size = get_image_from_url(args.url[0])
+    else:
+        f, size = get_image_from_url(args.url)
     main(f, size)
 elif args.file:
     f, size = get_image_from_file(args.file)
