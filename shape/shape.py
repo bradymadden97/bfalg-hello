@@ -34,7 +34,7 @@ __version__ = "1.0"
 
 def parse_args(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-u', '--url', help="Input image url (1 image)")
+    parser.add_argument('-u', '--url', help="Input image url (1 image)", action="append")
     parser.add_argument('-f', '--file', help="Input image file (1 image)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
     parser.add_argument('-v', '--version', help="Return version", action='version', version=__version__)
