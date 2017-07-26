@@ -1,4 +1,4 @@
-name: dep_env
+name: bfalg-shape
 channels:
   - conda-forge
   - bioconda
