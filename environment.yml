@@ -1,6 +1,9 @@
 name: bfalg-shape
 channels:
-    - https://proxy:proxy@nexus.devops.geointservices.io/content/repositories/beachfront-conda
+  - conda-forge
+  - bioconda
+  - coastline
+  - defaults
 dependencies:
     - numpy=1.12.0
     - potrace=1.11
