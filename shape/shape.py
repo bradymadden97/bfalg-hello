@@ -31,6 +31,7 @@ import requests
 Image.MAX_IMAGE_PIXELS = 1000000000
 __version__ = "1.0"
 
+logging.error(sys.argv)
 
 def define_arguments():
     parser = argparse.ArgumentParser()
@@ -207,6 +208,7 @@ def main(fn, img_size, bands=[1, 1]):
 
 args = define_arguments()
 if args.url:
+    logging.error(args.url)
     f, size = get_image_from_file(args.url[0])
     main(f, size)
 elif args.file:
