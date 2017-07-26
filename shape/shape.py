@@ -32,14 +32,14 @@ Image.MAX_IMAGE_PIXELS = 1000000000
 __version__ = "1.0"
 
 
-def parse_args(args):
+def define_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', '--url', help="Input image url (1 image)", action="append")
     parser.add_argument('-f', '--file', help="Input image file (1 image)")
     parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
     parser.add_argument('-v', '--version', help="Return version", action='version', version=__version__)
-
-    return parser.parse_args(args)
+    a = parser.parse_args()
+    return a
 
 
 def get_image_from_url(url):
@@ -205,13 +205,10 @@ def main(fn, img_size, bands=[1, 1]):
     return geojson
 
 
-args = parse_args(sys.argv[1:])
+args = define_arguments()
 if args.url:
-    if(type(args.url) is list):
-        f, size = get_image_from_url(args.url[0])
-    else:
-        f, size = get_image_from_url(args.url)
+    f, size = get_image_from_file(args.url[0])
     main(f, size)
 elif args.file:
-    f, size = get_image_from_file(args.file)
+    f, size = get_image_from_file(args.file[0])
     main(f, size)
