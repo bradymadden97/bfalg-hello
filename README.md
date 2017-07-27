@@ -27,7 +27,7 @@ POST to https://piazza.int.geointservices.io/job
   "data": {
     "dataInputs": {
       "body": {
-        "content": "{\"cmd\":\"-u \\\"https://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/LC81390452014295LGN00_B1.TIF\\\" \"}",
+        "content": "{\"cmd\":\"-f landsatImage.TIF\",\"inExtFiles\":[\"https://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/LC81390452014295LGN00_B1.TIF\"],\"inExtNames\":[\"landsatImage.TIF\"],\"outGeoJson\":[\"shape.geojson\"]}",
         "type": "body",
         "mimeType": "application/json"
       }
