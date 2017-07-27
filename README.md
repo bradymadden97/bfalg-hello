@@ -21,7 +21,7 @@ go build
 ## Running a piazza job with your algorithm:
 * An example job creation cURL command for bfalg-shape would look like:
 ```
-curl -u $PZ_API_KEY -X POST \
+curl -u $PZ_API_KEY:"" -X POST \
   https://piazza.int.geointservices.io/job \
   -H 'content-type: application/json' \
   -d '{
@@ -46,18 +46,18 @@ curl -u $PZ_API_KEY -X POST \
 * From the example job creation above using bfalg-shape you can view the resulting geoJSON stored in Piazza using the following steps:
 * Retrieve ` jobId ` from response from kicking off piazza job
 ```
-curl -u $PZ_API_KEY -X GET \
+curl -u $PZ_API_KEY:"" -X GET \
   https://piazza.int.geointservices.io/job/{jobId}
 ```
 * Retrieve ` dataId ` from getJob response
 ```
-curl -u $PZ_API_KEY -X GET \
+curl -u $PZ_API_KEY:"" -X GET \
   https://piazza.int.geointservices.io/file/{dataId} \
 ```
 * Retrieve ` fileId ` from getFile response
 * fileId should be located at ` OutFiles.{fileName} `
 ```
-curl -u $PZ_API_KEY -X GET \
+curl -u $PZ_API_KEY:"" -X GET \
   https://piazza.int.geointservices.io/file/{fileId} \
 ```
 * Response is contents of fileName saved by bfalg-shape in Piazza
