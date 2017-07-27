@@ -22,7 +22,7 @@ node {
         appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
     }
     def appName = "bfalg-shape-${appvers}"
-    dif("bfalg-shape/ci"){
+    dir("bfalg-shape/ci"){
         sh """
             ls
         """
