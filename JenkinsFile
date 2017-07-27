@@ -11,7 +11,7 @@ node {
         sh "mkdir -p bfalg-shape"
         sh "mkdir -p ${root}/gopath/src/github.com/venicegeo/pzsvc-exec"
         dir("bfalg-shape") {
-            git url: "https://github.com/venicegeo/bfalg-shape", branch: "master"
+            git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
         }
         dir("gopath/src/github.com/venicegeo/pzsvc-exec") {
             git url: "https://github.com/venicegeo/pzsvc-exec", branch: "master"
