@@ -40,7 +40,7 @@ jobId=`$curl -X POST https://piazza.int.geointservices.io/job \
 
 
 # ---Checking if job started---
-if [ $jobId == "null" ]
+if [[ $jobId == "null" ]]
 then
     echo "Error creating job. Exiting test."
     exit 1
@@ -50,21 +50,21 @@ echo "Kicked off job with jobId $jobId"
 
 # ---Checking job status until success or otherwise---
 jobStatus="null"
-while [ $jobStatus != "Success" ]; do
+while [[ $jobStatus != "Success" ]]; do
     echo "Checking job status for job $jobId"
     jobStatus=`$curl -X GET https://piazza.int.geointservices.io/job/$jobId | jq -r .data.status`
     echo "job status = $jobStatus"
-    if [ $jobStatus == "Cancelled" ]
+    if [[ $jobStatus == "Cancelled" ]]
     then
         echo "Job $jobId ended with status Cancelled"
         exit 1
     fi
-    if [ $jobStatus == "Error" ]
+    if [[ $jobStatus == "Error" ]]
     then
         echo "Job $jobId ended with status Error"
         exit 1
     fi
-    if [ $jobStatus == "Fail" ]
+    if [[ $jobStatus == "Fail" ]]
     then
         echo "Job $jobId ended with status Fail"
         exit 1
@@ -79,7 +79,7 @@ dataId=`$curl -X GET https://piazza.int.geointservices.io/job/$jobId | jq -r .da
 
 
 # ---Checking if dataId received---
-if [ $dataId == "null" ]
+if [[ $dataId == "null" ]]
 then
     echo "Error getting dataId. Exiting test."
     exit 1
@@ -93,7 +93,7 @@ fileId=`$curl -X GET https://piazza.int.geointservices.io/file/$dataId | jq -r '
 
 
 # ---Checking if fileId received---
-if [ $fileId == "null" ]
+if [[ $fileId == "null" ]]
 then
     echo "Error getting fileId. Exiting test."
     exit 1
@@ -107,7 +107,7 @@ geojsonData=`$curl -X GET https://piazza.int.geointservices.io/file/$fileId`
 
 
 # ---Checking if geojson data exists---
-if [ $geojsonData | jq -r .type == "error" ]
+if [[ $geojsonData | jq -r .type == "error" ]]
 then
     echo "Error getting geojson data. Exiting test."
     exit 1
