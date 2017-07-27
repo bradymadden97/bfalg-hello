@@ -21,9 +21,8 @@ go build
 ## Running a piazza job with your algorithm:
 * An example job creation cURL command for bfalg-shape would look like:
 ```
-curl -X POST \
+curl -u $PZ_API_KEY -X POST \
   https://piazza.int.geointservices.io/job \
-  -H 'authorization: Basic {base64Encode($PZ_API_KEY:)}' \
   -H 'content-type: application/json' \
   -d '{
   "data": {
@@ -40,7 +39,6 @@ curl -X POST \
   "type": "execute-service"
 }'
 ```
-* Note that the authorization header is `Basic ` followed by the Base64 encoding of your Piazza API Key and by a `:`.
 * Pzsvc-exec downloads the external file(s) listed in `inExtFiles` and saves them in a temporary directory under the name(s) listed in `inExtNames`. Pzsvc-exec will also look to download the file listed in `outGeoJson` after execution of the program.
 * More documentation on writing Pzsvc-exec compatible requests can be found in the [pzsvc-exec repo](https://github.com/venicegeo/pzsvc-exec#execute-endpoint-request-format).
 
@@ -48,21 +46,18 @@ curl -X POST \
 * From the example job creation above using bfalg-shape you can view the resulting geoJSON stored in Piazza using the following steps:
 * Retrieve ` jobId ` from response from kicking off piazza job
 ```
-curl -X GET \
-  https://piazza.int.geointservices.io/job/{jobId} \
-  -H 'authorization: Basic {base64Encode($PZ_API_KEY:)}' \
+curl -u $PZ_API_KEY -X GET \
+  https://piazza.int.geointservices.io/job/{jobId}
 ```
 * Retrieve ` dataId ` from getJob response
 ```
-curl -X GET \
+curl -u $PZ_API_KEY -X GET \
   https://piazza.int.geointservices.io/file/{dataId} \
-  -H 'authorization: Basic {base64Encode($PZ_API_KEY:)}' \
 ```
 * Retrieve ` fileId ` from getFile response
 * fileId should be located at ` OutFiles.{fileName} `
 ```
-curl -X GET \
+curl -u $PZ_API_KEY -X GET \
   https://piazza.int.geointservices.io/file/{fileId} \
-  -H 'authorization: Basic {base64Encode($PZ_API_KEY:)}' \
 ```
 * Response is contents of fileName saved by bfalg-shape in Piazza
