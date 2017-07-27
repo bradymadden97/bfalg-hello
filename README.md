@@ -27,7 +27,7 @@ POST to https://piazza.int.geointservices.io/job
   "data": {
     "dataInputs": {
       "body": {
-        "content": "{\"cmd\":\"-f landsatImage.TIF\",\"inExtFiles\":[\"https://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/LC81390452014295LGN00_B1.TIF\"],\"inExtNames\":[\"landsatImage.TIF\"],\"outGeoJson\":[\"shape.geojson\"]}",
+        "content": "{\"cmd\":\"-f landsatImage.TIF -o shape.geojson\",\"inExtFiles\":[\"https://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/LC81390452014295LGN00_B1.TIF\"],\"inExtNames\":[\"landsatImage.TIF\"],\"outGeoJson\":[\"shape.geojson\"]}",
         "type": "body",
         "mimeType": "application/json"
       }
@@ -38,4 +38,5 @@ POST to https://piazza.int.geointservices.io/job
   "type": "execute-service"
 }
 ```
-* Notice URLs must be surrounded by double-quotations, which must be double-escaped with ` \\\ `
+* Pzsvc-exec downloads the external file(s) listed in `inExtFiles` and saves them in a temporary directory under the names listed in `inExtNames`. Pzsvc-exec will also look to download the files listed in `outGeoJson` after execution of the program.
+* More documentation on writing Pzsvc-exec compatible requests can be found in the [pzsvc-exec repo](https://github.com/venicegeo/pzsvc-exec#execute-endpoint-request-format).

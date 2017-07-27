@@ -16,18 +16,16 @@ import argparse
 import gippy
 import json
 import math
-import random
-import sys
 import os
+import random
+import requests
+import sys
 import uuid
-import tempfile
-import logging
+import version
 
-from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
-import requests
-import version
+from pyproj import Proj, transform
 
 
 __version__ = version.__version__
@@ -37,8 +35,8 @@ Image.MAX_IMAGE_PIXELS = 1000000000
 def define_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', '--url', help="Input image url (1 image)")
-    parser.add_argument('-f', '--file', help="Input image file (1 image)")
-    parser.add_argument('-o', '--outdir', help="Save intermediate files to this directory (otherwise temp)", default='')
+    parser.add_argument('-f', '--infile', help="Input image file (1 image)")
+    parser.add_argument('-o', '--outfile', help="Save output geojson to this file (otherwise temp)")
     parser.add_argument('-v', '--version', help="Return version", action='version', version=__version__)
     return parser.parse_known_args()[0]
 
@@ -75,7 +73,6 @@ def get_image_from_file(filename):
 def convert_image(filename, bands):
     # Convert to GeoImage
     geoimg = gippy.GeoImage(filename, True).select(bands)
-
     return geoimg
 
 
@@ -161,9 +158,14 @@ def convert_latlon(geoimg, shape):
 
 
 def process_fileout(filename, geojson):
-    fileout = filename.split(".")[0] + ".geojson"
-    with open(fileout, 'w') as f:
-        f.write(json.dumps(geojson, indent=4))
+    # Create outfile
+    fout = args.outfile
+    if args.outfile is None:
+        fout = filename.split(".")[0] + ".geojson"
+
+    # Save geojson file
+    with open(fout, 'w') as f:
+        f.write(json.dumps(geojson))
 
 
 def main(fn, img_size, bands=[1, 1]):
@@ -176,7 +178,6 @@ def main(fn, img_size, bands=[1, 1]):
 
     # Convert shape to relative latitude-longitude coordinates
     geo_shape = convert_latlon(geoimg, shape)
-
     # Write coordinates as geojson
     geojson = {
         'type': 'FeatureCollection',
@@ -192,16 +193,6 @@ def main(fn, img_size, bands=[1, 1]):
     # Flush old stdout
     sys.stdout.flush()
 
-    # Log geojson to stderr
-    logging.error(geojson)
-
-    # Make tempfolder for geojson file
-    fout = os.path.join(tempfile.mkdtemp(), "shape.geojson")
-
-    # Save geojson file
-    with open("shape.geojson", 'w') as f:
-        f.write(json.dumps(geojson))
-
     # Return geojson
     return geojson
 
@@ -210,6 +201,6 @@ args = define_arguments()
 if args.url:
     f, size = get_image_from_url(args.url)
     main(f, size)
-elif args.file:
+elif args.infile:
     f, size = get_image_from_file(args.file)
     main(f, size)
