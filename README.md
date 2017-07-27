@@ -21,9 +21,11 @@ go build
 ## Running a piazza job with your algorithm:
 * An example job creation cURL command for bfalg-shape would look like:
 ```
-POST to https://piazza.int.geointservices.io/job
--Include API key in header
-{
+curl -X POST \
+  https://piazza.int.geointservices.io/job \
+  -H 'authorization: Basic {base64Encode(PZ_API_KEY:)}' \
+  -H 'content-type: application/json' \
+  -d '{
   "data": {
     "dataInputs": {
       "body": {
@@ -36,7 +38,8 @@ POST to https://piazza.int.geointservices.io/job
     "serviceId": "238e8795-1a4d-4220-8f5c-e6434f2c4373"
   },
   "type": "execute-service"
-}
+}'
 ```
-* Pzsvc-exec downloads the external file(s) listed in `inExtFiles` and saves them in a temporary directory under the names listed in `inExtNames`. Pzsvc-exec will also look to download the files listed in `outGeoJson` after execution of the program.
+* Note that the authorization header is `Basic ` followed by the Base64 encoding of your Piazza API Key and by a `:`.
+* Pzsvc-exec downloads the external file(s) listed in `inExtFiles` and saves them in a temporary directory under the name(s) listed in `inExtNames`. Pzsvc-exec will also look to download the file listed in `outGeoJson` after execution of the program.
 * More documentation on writing Pzsvc-exec compatible requests can be found in the [pzsvc-exec repo](https://github.com/venicegeo/pzsvc-exec#execute-endpoint-request-format).
