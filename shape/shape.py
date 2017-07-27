@@ -202,5 +202,5 @@ if args.url:
     f, size = get_image_from_url(args.url)
     main(f, size)
 elif args.infile:
-    f, size = get_image_from_file(args.file)
+    f, size = get_image_from_file(args.infile)
     main(f, size)
