@@ -27,9 +27,11 @@ from pyproj import Proj, transform
 from osgeo import osr
 from PIL import Image
 import requests
+import version
 
+
+__version__ = version.__version__
 Image.MAX_IMAGE_PIXELS = 1000000000
-__version__ = "1.0"
 
 
 def define_arguments():
