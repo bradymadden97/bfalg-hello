@@ -114,3 +114,4 @@ then
 fi
 
 echo $geojsonData
+exit 0

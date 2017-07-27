@@ -136,4 +136,11 @@ if(false){
             }
         }
     }
+    stage("Int test") {
+        sh " cd ci "
+        def run_test = sh(script: "./test_shape.sh", returnStatus: true)
+        if(run_test != 0) {
+            error("Int test failed. Check logs for details"
+        }
+    }
 }
