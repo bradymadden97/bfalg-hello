@@ -1,6 +1,13 @@
 # bfalg-shape
 
-## Building:
+## Writing an algorithm that works with Beachfront:
+* Your algorithm will be run as a job in Piazza and therefore must be designed to be executed from the command line
+* Piazza will download any images in advance and save them in the directory with your algorithm
+* Your algorithm should result in a geojson output file and it should be saved to the current directory
+* Piazza will download that geojson file to display in the Beachfront UI
+
+
+## Building your algorithm:
 _to do_
 
 
