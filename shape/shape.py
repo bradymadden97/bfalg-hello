@@ -199,7 +199,7 @@ def main(fn, img_size, bands=[1, 1]):
     fout = os.path.join(tempfile.mkdtemp(), "shape.geojson")
 
     # Save geojson file
-    with open(fout, 'w') as f:
+    with open("shape.geojson", 'w') as f:
         f.write(json.dumps(geojson))
 
     # Return geojson
