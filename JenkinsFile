@@ -49,6 +49,7 @@ if(false){
           cp gopath/src/github.com/venicegeo/pzsvc-exec/pzsvc-exec .
           rm -rf gopath
           cp -r bfalg-shape/shape .
+          cp -r bfalg-shape/ci .
           cp bfalg-shape/manifest.jenkins.yml .
           cp bfalg-shape/pzsvc-exec.config .
           cp bfalg-shape/environment.yml .
@@ -137,12 +138,13 @@ if(false){
         }
     }
     stage("Phase One Test") {
-        dir("bfalg-shape") {
-            sh " cd ci "
+        /*
+        dir("ci"){
             def run_test = sh(script: "./test_shape.sh", returnStatus: true)
             if(run_test != 0) {
                 error("Int test failed. Check logs for details")
             }
         }
+        */
     }
 }
