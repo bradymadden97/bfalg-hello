@@ -18,6 +18,7 @@
 # ---Wait until new build of bfalg-shape is ready---
 responseCode=404
 while [[ $responseCode != 200 ]]; do
+    echo "Waiting for bfalg-shape.int.geointservices.io ..."
     responseCode=`curl -s -o /dev/null -w '%{http_code}' https://bfalg-shape.int.geointservices.io`
     sleep 10s
 done
@@ -26,6 +27,7 @@ done
 # ---Setup---
 PZKEY=$PZ_API_KEY
 curl="curl -S -s -u $PZKEY:"" -H Content-Type:application/json"
+uuidRegex='(?:[a-g]|[0-9]){8}-(?:(?:[a-g]|[0-9]){4}-){3}(?:[a-g]|[0-9]){12}'
 
 
 # ---Create test job using bfalg-shape service---
@@ -45,16 +47,14 @@ jobCurl=`$curl -X POST https://piazza.int.geointservices.io/job \
         },
         "type": "execute-service"
     }'`
-
-uuidRegex='(?:[a-g]|[0-9]){8}-(?:(?:[a-g]|[0-9]){4}-){3}(?:[a-g]|[0-9]){12}'
 jobId=`echo $jobCurl|grep -Po $uuidRegex`
+
 
 # ---Checking if job started---
 if [ "$jobId" = "" ]; then
   echo "Could not create job"
   exit 1
 fi
-
 echo Created job with jobId $jobId
 
 
@@ -95,13 +95,13 @@ if [[ "$jobStatus" =~ $dataIdRegex ]]; then
   dataId="${BASH_REMATCH[1]}"
 fi
 
+
 # ---Checking if dataId received---
 if [ "$dataId" = "" ]; then
     echo "Error getting dataId. Exiting test."
     exit 1
 fi
 echo "Retrieved dataId $dataId"
-
 
 
 # ---Getting fileId from dataId---
@@ -117,6 +117,7 @@ if [ "$fileId" = "" ]; then
     exit 1
 fi
 echo "Retrieved fileId $fileId"
+
 
 # ---Getting geojson data from file---
 echo "Getting geojson data at fileId $fileId"
