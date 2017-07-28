@@ -44,6 +44,7 @@ jobId=`echo $jobCurl|grep -Po $uuidRegex`
 # ---Checking if job started---
 if [ "$jobId" = "" ]; then
   echo "Could not create job"
+  echo "$jobCurl"
   exit 1
 fi
 
