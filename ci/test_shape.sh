@@ -22,7 +22,7 @@ curl="curl -S -s -u $PZKEY:"" -H Content-Type:application/json"
 
 # ---Create test job using bfalg-shape service---
 echo "Creating job"
-jobId=`$curl -X POST https://piazza.int.geointservices.io/job \
+jobCurl=`$curl -X POST https://piazza.int.geointservices.io/job \
     -d '{
         "data": {
             "dataInputs": {
@@ -36,16 +36,18 @@ jobId=`$curl -X POST https://piazza.int.geointservices.io/job \
             "serviceId": "238e8795-1a4d-4220-8f5c-e6434f2c4373"
         },
         "type": "execute-service"
-    }' | jq -r .data.jobId`
+    }'`
 
+uuidRegex='((?:[a-g]|[0-9]){8}-(?:(?:[a-g]|[0-9]){4}-){3}(?:[a-g]|[0-9]){12})'
+jobId=`echo $jobCurl|grep -Po $uuidRegex`
 
 # ---Checking if job started---
-if [[ $jobId == "null" ]]
-then
-    echo "Error creating job. Exiting test."
-    exit 1
+if [ "$jobId" = "" ]; then
+  echo "Could not create job"
+  exit 1
 fi
-echo "Kicked off job with jobId $jobId"
+
+echo Created job with jobId $jobId
 
 
 # ---Checking job status until success or otherwise---
