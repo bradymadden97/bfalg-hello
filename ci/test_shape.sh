@@ -80,43 +80,44 @@ done
 
 # ---Getting dataId from completed job---
 echo "Job $jobId finished. Getting dataId"
-dataId=`$curl -X GET https://piazza.int.geointservices.io/job/$jobId | jq -r .data.result.dataId`
-
+dataIdRegex='"dataId"\s*:\s*"([^"]*)'
+jobStatus=`$curl -X GET https://piazza.int.geointservices.io/job/$jobId`
+dataId=""
+if [[ "$jobStatus" =~ $dataIdRegex ]]; then
+  dataId="${BASH_REMATCH[1]}"
+fi
 
 # ---Checking if dataId received---
-if [[ $dataId == "null" ]]
-then
+if [ "$dataId" = "" ]; then
     echo "Error getting dataId. Exiting test."
     exit 1
 fi
 echo "Retrieved dataId $dataId"
 
 
+
 # ---Getting fileId from dataId---
 echo "Getting fileId using dataId $dataId"
-fileId=`$curl -X GET https://piazza.int.geointservices.io/file/$dataId | jq -r '.OutFiles."shape.geojson"'`
-
-
-# ---Checking if fileId received---
-if [[ $fileId == "null" ]]
-then
+fileCurl=`$curl -X GET https://piazza.int.geointservices.io/file/$dataId`
+fileIdRegex='"shape.geojson"\s*:\s*"([^"]*)'
+fileId=""
+if [[ "$fileCurl" =~ $fileIdRegex ]]; then
+  fileId="${BASH_REMATCH[1]}"
+fi
+if [ "$fileId" = "" ]; then
     echo "Error getting fileId. Exiting test."
     exit 1
 fi
 echo "Retrieved fileId $fileId"
 
-
 # ---Getting geojson data from file---
 echo "Getting geojson data at fileId $fileId"
-geojsonData=`$curl -X GET https://piazza.int.geointservices.io/file/$fileId`
-
-
-# ---Checking if geojson data exists---
-if [[ $geojsonData | jq -r .type == "error" ]]
-then
-    echo "Error getting geojson data. Exiting test."
-    exit 1
+geojsonData=`$curl -X GET https://piazza.int.geointservices.io/file/$dataId`
+errorRegex='"type"\s*:\s*"error"'
+errorCheck=`echo $geojsonData|grep -Po $errorRegex`
+if [ "$errorCheck" != "" ]; then
+  echo "Error getting geojson data. Exiting test."
+  exit 1
 fi
-
 echo $geojsonData
 exit 0
