@@ -140,7 +140,18 @@ if(false){
     stage("Phase One Test") {
         
         dir("ci"){
-            sh "bash ./test_shape.sh"
+            def piazza_api_key = ""
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.BEACHFRONT_PIAZZA_AUTH}", usernameVariable: 'TOKEN', passwordVariable: 'unused']]) {
+                def keyCurl = sh(script: """curl -s https://piazza.${env.PHASE_ONE_PCF_SPACE}.${env.PIAZZA_URL}/v2/key -u \"${TOKEN}:\"""", returnStdout: true)
+                piazza_api_key = sh(script: """echo \"${keyCurl}\"|grep -oE '\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}'""", returnStdout: true).trim()
+                sh """
+                  if [ -z $piazza_api_key ]; then
+                    echo "No Piazza API key found"
+                    exit 1
+                  fi
+                """
+            }
+            sh "export PZ_API_KEY=$piazza_api_key && bash ./test_shape.sh"
         }
         
     }
