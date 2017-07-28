@@ -38,7 +38,7 @@ jobCurl=`$curl -X POST https://piazza.int.geointservices.io/job \
         "type": "execute-service"
     }'`
 
-uuidRegex='((?:[a-g]|[0-9]){8}-(?:(?:[a-g]|[0-9]){4}-){3}(?:[a-g]|[0-9]){12})'
+uuidRegex='(?:[a-g]|[0-9]){8}-(?:(?:[a-g]|[0-9]){4}-){3}(?:[a-g]|[0-9]){12}'
 jobId=`echo $jobCurl|grep -Po $uuidRegex`
 
 # ---Checking if job started---
@@ -51,27 +51,30 @@ echo Created job with jobId $jobId
 
 
 # ---Checking job status until success or otherwise---
-jobStatus="null"
+statusRegex='"status"\s*:\s*"([^"]*)'
+jobStatus="foo"
 while [[ $jobStatus != "Success" ]]; do
-    echo "Checking job status for job $jobId"
-    jobStatus=`$curl -X GET https://piazza.int.geointservices.io/job/$jobId | jq -r .data.status`
-    echo "job status = $jobStatus"
-    if [[ $jobStatus == "Cancelled" ]]
-    then
-        echo "Job $jobId ended with status Cancelled"
-        exit 1
-    fi
-    if [[ $jobStatus == "Error" ]]
-    then
-        echo "Job $jobId ended with status Error"
-        exit 1
-    fi
-    if [[ $jobStatus == "Fail" ]]
-    then
-        echo "Job $jobId ended with status Fail"
-        exit 1
-    fi
-    sleep 10s
+  jobStatus=`$curl -X GET https://piazza.int.geointservices.io/job/$jobId`
+  if [[ "$jobStatus" =~ $statusRegex ]]; then
+    jobStatus="${BASH_REMATCH[1]}"
+  fi
+  if [ "$jobStatus" = "" ]; then
+    echo Bad curl
+    exit 1
+  fi
+  if [ "$jobStatus" = "Cancelled" ]; then
+    echo "Job $jobId ended with status Cancelled"
+    exit 1
+  fi
+  if [ "$jobStatus" = "Error" ]; then
+    echo "Job $jobId ended with status Error"
+    exit 1
+  fi
+  if [ "$jobStatus" = "Fail" ]; then
+    echo "Job $jobId ended with status Fail"
+    exit 1
+  fi
+  sleep 10s
 done
 
 
