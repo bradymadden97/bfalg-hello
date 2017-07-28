@@ -120,7 +120,7 @@ echo "Retrieved fileId $fileId"
 
 # ---Getting geojson data from file---
 echo "Getting geojson data at fileId $fileId"
-geojsonData=`$curl -X GET https://piazza.int.geointservices.io/file/$dataId`
+geojsonData=`$curl -X GET https://piazza.int.geointservices.io/file/$fileId`
 errorRegex='"type"\s*:\s*"error"'
 errorCheck=`echo $geojsonData|grep -Po $errorRegex`
 if [ "$errorCheck" != "" ]; then
