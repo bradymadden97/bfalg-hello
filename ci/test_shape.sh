@@ -15,6 +15,14 @@
 # limitations under the License.
 
 
+# ---Wait until new build of bfalg-shape is ready---
+responseCode=404
+while [[ $responseCode != 200 ]]; do
+    responseCode=`curl -s -o /dev/null -w '%{http_code}' https://bfalg-shape.int.geointservices.io`
+    sleep 10s
+done
+
+
 # ---Setup---
 PZKEY=$PZ_API_KEY
 curl="curl -S -s -u $PZKEY:"" -H Content-Type:application/json"
