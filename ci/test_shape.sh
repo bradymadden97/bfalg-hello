@@ -22,6 +22,7 @@ while [[ $responseCode != 200 ]]; do
     echo "Waiting for bfalg-shape.int.geointservices.io ..."
     responseCode=`curl -s -o /dev/null -w '%{http_code}' https://bfalg-shape.int.geointservices.io`
     failCount=$((failCount+1))
+    echo Fail number $failCount
     if [[ $failCount -eq 10 ]]; then
       echo Failed to start
       exit 1
