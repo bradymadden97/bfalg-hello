@@ -1,1 +1,1 @@
-web: pwd && ls && pzsvc-exec pzsvc-exec.config
+web: /home/vcap/app/.conda/envs/dep_env/bin/pzsvc-exec pzsvc-exec.config
