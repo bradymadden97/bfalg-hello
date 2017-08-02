@@ -12,3 +12,4 @@ dependencies:
     - gdal=2.1.3
     - gippy=1.0.0
     - requests=2.18.1
+    - pzsvc-exec
