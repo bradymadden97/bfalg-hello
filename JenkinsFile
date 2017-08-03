@@ -2,6 +2,7 @@
 
 node {
     def root = pwd()
+    def mvn = tool 'M3'
 
     stage("Setup") {
         deleteDir()
