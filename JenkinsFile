@@ -31,7 +31,8 @@ node {
               [$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]
             ]) {
             sh """
-              echo `echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`
+              sed -i  "s\\CONDA_CHANNEL\\`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`\\g" environment.yml
+              cat environment.yml
             """
         }
         def archiveName="bfalg-shape.tgz"
