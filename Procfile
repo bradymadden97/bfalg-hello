@@ -1,1 +1,1 @@
-web: pzsvc-exec pzsvc-exec.config
+web: rm environment.yml && pzsvc-exec pzsvc-exec.config
