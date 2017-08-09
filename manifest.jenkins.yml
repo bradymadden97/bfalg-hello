@@ -1,7 +1,7 @@
 applications:
 - name: bfalg-shape
   host: bfalg-shape
-  health_check_type: none
+  health_check_type: process
   memory: 1G
   timeout: 100
   disk_quota: 2G
