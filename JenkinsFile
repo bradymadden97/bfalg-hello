@@ -51,7 +51,7 @@ node {
         if(!fileExists('.cf')) {
             sh "mkdir -p .cf"
         }
-        def piazza_api_key = ""
+        def piazza_api_key = "empty"
         def piazza_url = "https://piazza.${env.PHASE_ONE_PCF_SPACE}.${env.PIAZZA_URL}"
         /*withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${params.BEACHFRONT_PIAZZA_AUTH}", usernameVariable: 'TOKEN', passwordVariable: 'unused']]) {
             def keyCurl = sh(script: """curl -s ${piazza_url}/v2/key -u \"${TOKEN}:\"""", returnStdout: true)
