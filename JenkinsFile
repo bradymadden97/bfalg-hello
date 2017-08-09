@@ -45,11 +45,6 @@ node {
     	  """
         }
         sh "rm ${archiveName}"
-        withCredentials([
-              [$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]
-            ]) {
-            sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
-        }
     }
     stage("Phase One Deploy") {
         if(!fileExists('.cf')) {
@@ -67,6 +62,9 @@ node {
               fi
             """
         }*/
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]]) {
+            sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
+        }
         withEnv([
           "CF_HOME=.cf"
         ]) {
