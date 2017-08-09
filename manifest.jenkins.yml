@@ -8,4 +8,4 @@ applications:
   instances: 1
   buildpack: https://github.com/cloudfoundry/python-buildpack.git
   env:
-    PATH: "/bin:/usr/bin:/home/vcap/app/.cloudfoundry/0/conda/bin/"
+    PATH: "/bin:/usr/bin:/home/vcap/app/.conda/bin/"
