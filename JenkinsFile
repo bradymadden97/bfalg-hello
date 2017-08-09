@@ -27,7 +27,14 @@ node {
           cp bfalg-shape/Procfile .
           rm -rf bfalg-shape*
         """
-
+        withCredentials([
+              [$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]
+            ]) {
+        sh """
+          echo $USER
+          echo $CONDA_CHANNEL
+        """
+        }
         def archiveName="bfalg-shape.tgz"
         sh """
           tar -cvzf ${archiveName} *
