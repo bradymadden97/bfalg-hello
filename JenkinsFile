@@ -14,7 +14,6 @@ node {
     stage("Archive") {
         def archiveName="bfalg-shape.tgz"
         sh "tar -cvzf ${archiveName} shape/ ci/ manifest.jenkins.yml pzsvc-exec.config environment.yml Procfile"
-        if (false) {
         sh """
           mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
     		-DrepositoryId=nexus \
@@ -26,7 +25,6 @@ node {
     		-DartifactId=bfalg-shape \
     		-Dversion=${appvers} \
     	  """
-        }
         sh "rm ${archiveName}"
     }
     stage("Phase One Deploy") {
