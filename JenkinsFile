@@ -6,31 +6,14 @@ node {
 
     stage("Setup") {
         deleteDir()
-        sh "mkdir -p bfalg-shape"
-        dir("bfalg-shape") {
-            git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
-        }
+        git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
     }
-    def appvers = ""
-    dir("bfalg-shape") {
-        appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
-    }
+    appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
     def appName = "bfalg-shape-${appvers}"
 
     stage("Archive") {
-        sh """
-          cp -r bfalg-shape/shape .
-          cp -r bfalg-shape/ci .
-          cp bfalg-shape/manifest.jenkins.yml .
-          cp bfalg-shape/pzsvc-exec.config .
-          cp bfalg-shape/environment.yml .
-          cp bfalg-shape/Procfile .
-          rm -rf bfalg-shape*
-        """
         def archiveName="bfalg-shape.tgz"
-        sh """
-          tar -cvzf ${archiveName} *
-        """
+        sh "tar -cvzf ${archiveName} shape/ ci/ manifest.jenkins.yml pzsvc-exec.config environment.yml Procfile"
         if (false) {
         sh """
           mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
