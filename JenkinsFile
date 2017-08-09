@@ -27,11 +27,6 @@ node {
           cp bfalg-shape/Procfile .
           rm -rf bfalg-shape*
         """
-        withCredentials([
-              [$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]
-            ]) {
-            sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
-        }
         def archiveName="bfalg-shape.tgz"
         sh """
           tar -cvzf ${archiveName} *
@@ -50,6 +45,11 @@ node {
     	  """
         }
         sh "rm ${archiveName}"
+        withCredentials([
+              [$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]
+            ]) {
+            sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
+        }
     }
     stage("Phase One Deploy") {
         if(!fileExists('.cf')) {
