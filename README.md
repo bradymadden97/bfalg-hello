@@ -8,8 +8,9 @@
 
 
 ## Building your algorithm:
-_to do_
-
+* All python algorithms should use conda
+* The easiest way to retrieve pzsvc-exec is to use the conda package provided in the nexus channel
+* The Procfile should be used to start pzsvc-exec
 
 ## Writing your pzsvc-exec.config file:
 * CliCmd is executed within a subfolder within pzsvc-exec, so the path to your algorithm should be proceeded by ` ../ `
