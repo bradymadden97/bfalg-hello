@@ -2,12 +2,9 @@ name: bfalg-shape
 channels:
   - CONDA_CHANNEL
 dependencies:
-    - numpy=1.12.0
-    - pypotrace=0.1.3
     - pillow=4.2.1
     - pyproj=1.9.5.1
-    - fiona=1.7.4
     - gdal=2.1.3
     - gippy=1.0.0
     - requests=2.18.1
-    - pzsvc-exec=0.1.0
+    - pzsvc-exec
