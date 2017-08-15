@@ -36,6 +36,7 @@ node {
 	    sh "mkdir share && cp ../environment.yml share/"
             sh "docker-compose rm -f --all"
             sh "docker-compose up --build --no-color"
+	    sh "ls share"
         }
     }
 }
