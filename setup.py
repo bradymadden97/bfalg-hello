@@ -22,11 +22,8 @@ import imp
 here = os.path.abspath(os.path.dirname(__file__))
 __version__ = imp.load_source('bfalg_shape.version', 'bfalg_shape/version.py').__version__
 
-# get the dependencies and installs
-with open(os.path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-    reqs = f.read().split('\n')
 
-install_requires = [x.strip() for x in reqs if 'git+' not in x]
+install_requires = ['pillow==4.2.1', 'pyproj==1.9.5.1', 'gdal==2.1.3', 'requests==2.18.1']
 
 setup(
     name='bfalg-shape',
