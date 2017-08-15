@@ -31,4 +31,10 @@ node {
     	  """
         sh "rm ${archiveName}"
     }}
+    stage("Conda Build") {
+        dir("docker") {
+            sh "docker-compose rm -f --all"
+            sh "docker-compose up --build --no-color"
+        }
+    }
 }
