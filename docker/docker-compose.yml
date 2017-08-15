@@ -1,0 +1,6 @@
+version: '2'
+services:
+  bfalg-shape-install:
+    build: .
+    volumes:
+     - ./share:/root/share
