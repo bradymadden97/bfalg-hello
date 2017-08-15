@@ -7,6 +7,10 @@ node {
     stage("Setup") {
         deleteDir()
         git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]]) {
+            sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
+        }
+        sh "cat environment.yml"
     }
     def appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
     def appName = "bfalg-shape-${appvers}"
