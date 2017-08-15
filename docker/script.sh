@@ -9,4 +9,3 @@ cp -a ~/miniconda2/pkgs/* .
 rm *.tar.bz2
 rm -rf cache
 rm urls && rm urls.txt
-ls
