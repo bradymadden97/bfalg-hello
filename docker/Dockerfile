@@ -3,6 +3,7 @@ FROM centos:centos7
 WORKDIR /root
 
 RUN yum -y update &&\
+    yum -y install bzip2 &&\
     curl -L https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -o miniconda.sh &&\
     /usr/bin/bash miniconda.sh -b -p $HOME/miniconda2 &&\
     rm miniconda.sh &&\
