@@ -21,16 +21,14 @@ import random
 import requests
 import sys
 import uuid
-import version
 
 from osgeo import osr
 from PIL import Image
 from pyproj import Proj, transform
 
+from bfalg_shape.version import __version__
 
-__version__ = version.__version__
 Image.MAX_IMAGE_PIXELS = 1000000000
-
 
 def define_arguments():
     parser = argparse.ArgumentParser()
@@ -196,11 +194,14 @@ def main(fn, img_size, bands=[1, 1]):
     # Return geojson
     return geojson
 
+def cli():
+    args = define_arguments()
+    if args.url:
+        f, size = get_image_from_url(args.url)
+        main(f, size)
+    elif args.infile:
+        f, size = get_image_from_file(args.infile)
+        main(f, size)
 
-args = define_arguments()
-if args.url:
-    f, size = get_image_from_url(args.url)
-    main(f, size)
-elif args.infile:
-    f, size = get_image_from_file(args.infile)
-    main(f, size)
+if __name__ == "__main__":
+    cli()

@@ -17,7 +17,7 @@ from setuptools import setup, find_packages
 import imp
 
 here = os.path.abspath(os.path.dirname(__file__))
-__version__ = imp.load_source('shape.version', 'shape/version.py').__version__
+__version__ = imp.load_source('bfalg_shape.version', 'bfalg_shape/version.py').__version__
 
 # get the dependencies and installs
 with open(os.path.join(here, 'requirements.txt'), encoding='utf-8') as f:
@@ -30,7 +30,7 @@ setup(
     version=__version__,
     description='Test Shape Algorithm',
     author='',
-    license='GPL',
+    license='APACHE 2.0',
     url='https://github.com/venicegeo/bfalg-shape',
     classifiers=[
         'Framework :: Pytest',
@@ -40,9 +40,9 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     entry_points = {
-        'console_scripts': ['bfalg-shape=shape.shape:cli'],
+        'console_scripts': ['bfalg-shape=bfalg_shape.shape:cli'],
     },
-    packages=find_packages(exclude=[]),
+    packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires,
 )
