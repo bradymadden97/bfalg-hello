@@ -2,4 +2,7 @@
 
 export PATH="$HOME/miniconda2/bin:$PATH"
 
-conda config
+cd share
+conda env create -f environment.yml
+source activate pzsvc-shape
+conda list
