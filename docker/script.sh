@@ -10,9 +10,10 @@ export PATH="$HOME/miniconda2/bin:$PATH"
 #rm -rf cache
 #rm urls && rm urls.txt
 
-mkdir bfalg-shape
-mv share/* bfalg-shape
+ls share
+mv share/bfalg-shape .
 cd bfalg-shape
 conda env create -f environment.yml -q
 source activate bfalg-shape
 python bfalg_shape/shape.py --version
+rm -rf share

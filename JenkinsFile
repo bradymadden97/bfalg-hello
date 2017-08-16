@@ -36,7 +36,9 @@ node {
         sh "rm ${archiveName}"
     }}
     stage("Conda Build") {
-	sh "mkdir share && cp -a bfalg-shape/* share && ls share"
+	sh "mkdir -p share/bfalg-shape && cp -a bfalg-shape/* share/bfalg-shape
+	sh "mkdir share/dependency-check && cp -a /jslave/dependency-check/dependency-check/* share/dependency-check"
+	sh "mkdir share/fortify && cp -a /opt/hp_fortify_sca/* share/fortify"
         dir("bfalg-shape/docker") {
 	    sh "docker-compose rm -f --all"
             sh "docker-compose up --build --no-color"
