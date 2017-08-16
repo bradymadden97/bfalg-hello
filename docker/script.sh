@@ -17,7 +17,12 @@ conda env create -f environment.yml -q
 source activate bfalg-shape
 python bfalg_shape/shape.py --version
 conda list
+
+../share/dependency-check/bin/dependency-check.sh --version"
+../share/dependency-check/bin/dependency-check.sh --project "bfalg-shape" --scan "." --format "XML" --enableExperimental --disableBundleAudit'
+
 cd ..
+
 python -c "import sys;print ':'.join(sys.path)"
 share/fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py} -python-path `python -c "import sys;print ':'.join(sys.path)"`
 share/fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
