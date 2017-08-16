@@ -13,6 +13,6 @@ export PATH="$HOME/miniconda2/bin:$PATH"
 mkdir bfalg-shape
 mv share/* bfalg-shape
 cd bfalg-shape
-conda env create -f environment.yml
+conda env create -f environment.yml -q
 source activate bfalg-shape
 python bfalg_shape/shape.py --version
