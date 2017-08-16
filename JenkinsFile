@@ -45,7 +45,7 @@ stage("Dependency Check") {
         ]) {
             sh """
               /jslave/dependency-check/dependency-check/bin/dependency-check.sh --version
-              /jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "bfalg-shape" --scan "docker/shape/*" --format "XML" --enableExperimental --disableBundleAudit
+              /jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "bfalg-shape" --scan 'docker/share/*' --format "XML" --enableExperimental --disableBundleAudit
               cat dependency-check-report.xml
 	    """
 	    ///bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
