@@ -47,8 +47,8 @@ stage("Dependency Check") {
               /jslave/dependency-check/dependency-check/bin/dependency-check.sh --version
               /jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "bfalg-shape" --scan "docker/shape/" --format "XML" --enableExperimental --disableBundleAudit
               cat dependency-check-report.xml
-	      #/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
-            """
+	    """
+	    ///bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
         }
     }
     stage("Fortify Scans") {
@@ -59,8 +59,8 @@ stage("Dependency Check") {
               /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} 'docker/share/*'
               /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr
               cat fortifyResults-${env.BUILD_NUMBER}.fpr
-	      #/bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
-            """
+	    """
+	    ///bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
         }
 	sh "ls"
     }
