@@ -16,7 +16,7 @@ cd bfalg-shape
 conda env create -f environment.yml -q
 source activate bfalg-shape
 python bfalg_shape/shape.py --version
-fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py}
-fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
+share/fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py}
+share/fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
 ls
 rm -rf share
