@@ -43,6 +43,7 @@ node {
 	    sh "docker-compose rm -f --all"
             sh "docker-compose up --build --no-color"
         }
+	sh "ls share"
 	error("stop")
     }
 stage("Dependency Check") {
