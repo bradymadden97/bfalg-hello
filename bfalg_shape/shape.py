@@ -26,7 +26,7 @@ from osgeo import osr
 from PIL import Image
 from pyproj import Proj, transform
 
-from bfalg_shape.version import __version__
+from version import __version__
 
 Image.MAX_IMAGE_PIXELS = 1000000000
 
