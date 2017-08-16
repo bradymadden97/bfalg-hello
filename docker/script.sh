@@ -18,7 +18,9 @@ source activate bfalg-shape
 python bfalg_shape/shape.py --version
 conda list
 cd ..
-share/fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py} -python-path "~/miniconda2/envs/bfalg-shape/lib/python2.7"
+export PYTHONPATH=~/miniconda2/envs/bfalg-shape/lib/python2.7
+ls $PYTHONPATH
+share/fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py}
 #share/fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
 ls
 rm -rf share/*
