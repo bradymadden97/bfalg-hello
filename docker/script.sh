@@ -20,6 +20,6 @@ conda list
 cd ..
 python -c "import sys;print ':'.join(sys.path)"
 share/fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py} -python-path `python -c "import sys;print ':'.join(sys.path)"`
-#share/fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
+share/fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
 ls
 rm -rf share/*
