@@ -6,13 +6,17 @@ node {
 
     stage("Setup") {
         deleteDir()
+	sh "mkdir bfalg-shape"
+	dir("bfalg-shape") {
         git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]]) {
             sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
         }
+	    def appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
+	    def appName = "bfalg-shape-${appvers}"
+	}
     }
-    def appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
-    def appName = "bfalg-shape-${appvers}"
+
 
     if(false){
     stage("Archive") {
@@ -32,12 +36,12 @@ node {
         sh "rm ${archiveName}"
     }}
     stage("Conda Build") {
-        dir("docker") {
-	    sh "mkdir share && cp ../environment.yml share/"
-            sh "docker-compose rm -f --all"
+	sh "mkdir share && cp -a bfalg-shape/* share && ls share"
+        dir("bfalg-shape/docker") {
+	    sh "docker-compose rm -f --all"
             sh "docker-compose up --build --no-color"
-	    sh "ls share"
         }
+	error("stop")
     }
 stage("Dependency Check") {
         withCredentials([
