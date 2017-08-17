@@ -3,4 +3,4 @@ services:
   bfalg-shape-install:
     build: .
     volumes:
-     - ../../share:/root/share
+     - ../../share:SED_ROOT/share

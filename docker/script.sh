@@ -22,6 +22,9 @@ cd ..
 source deactivate
 mv ~/miniconda2 share/
 
+rm -rf fortify
+rm -rf bfalg-shape
+
 exit 0
 
 fortify/bin/sourceanalyzer -h
