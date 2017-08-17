@@ -5,9 +5,9 @@ WORKDIR SED_ROOT
 RUN yum -y update &&\
     yum -y install bzip2 &&\
     curl -L https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -o miniconda.sh &&\
-    /usr/bin/bash miniconda.sh -b -p $HOME/miniconda2 &&\
+    /usr/bin/bash miniconda.sh -b -p SED_ROOT/miniconda2 &&\
     rm miniconda.sh &&\
-    export PATH="$HOME/miniconda2/bin:$PATH"
+    export PATH="SED_ROOT/miniconda2/bin:$PATH"
 
 ADD script.sh script.sh
 

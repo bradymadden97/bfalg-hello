@@ -20,7 +20,7 @@ python bfalg_shape/shape.py --version
 conda list
 cd ..
 source deactivate
-mv ~/miniconda2 share/
+mv SED_ROOT/miniconda2 share/
 
 rm -rf fortify
 rm -rf bfalg-shape
