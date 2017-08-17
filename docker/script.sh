@@ -24,13 +24,17 @@ fortify/bin/sourceanalyzer -h
 pythonPath=`python -c "import sys;print ':'.join(sys.path)"`
 echo $pythonPath
 echo Cleaning
-fortify/bin/sourceanalyzer -b "x" -clean -python-path "$pythonPath"
+fortify/bin/sourceanalyzer -b 1 -clean -python-path "$pythonPath"
 echo Building
-fortify/bin/sourceanalyzer -b "x" -python-path "$pythonPath" -show-files -verbose -debug -logfile trans.log bfalg-shape/{*.py,**/*.py} 
+fortify/bin/sourceanalyzer -b 1 -python-path "$pythonPath" -show-files -verbose -debug -logfile trans.log bfalg-shape/{*.py,**/*.py} 
+echo "## Trans Log ##"
 cat trans.log
+echo "#####"
 echo Analyzing
-fortify/bin/sourceanalyzer b "x" -Xmx1G -debug -python-path "$pythonPath" -logfile scan.log -scan -f fortifyResults.fpr
+fortify/bin/sourceanalyzer -b 1 -Xmx1G -debug -python-path "$pythonPath" -logfile scan.log -scan -f fortifyResults.fpr
+echo "## Scan Log ##"
 cat scan.log
+echo "#####"
 
 rm -rf fortify
 rm -rf bfalg-shape
