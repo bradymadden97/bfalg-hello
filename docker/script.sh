@@ -23,8 +23,8 @@ cd ..
 fortify/bin/sourceanalyzer -h
 pythonPath=`python -c "import sys;print ':'.join(sys.path)"`
 echo $pythonPath
-fortify/bin/sourceanalyzer -b 0 bfalg-shape/{*.py,**/*.py} -python-path "$pythonPath" -show-files -verbose
-fortify/bin/sourceanalyzer -b 0 -scan -Xmx1G -f fortifyResults-0.fpr
+fortify/bin/sourceanalyzer -b 1 bfalg-shape/{*.py,**/*.py} -python-path "$pythonPath" -show-files -verbose
+fortify/bin/sourceanalyzer -b 1 -scan -Xmx1G -f fortifyResults-1.fpr
 
 rm -rf fortify
 rm -rf bfalg-shape
