@@ -10,14 +10,11 @@ export PATH="$HOME/miniconda2/bin:$PATH"
 #rm -rf cache
 #rm urls && rm urls.txt
 
-ls share
 mv share/bfalg-shape .
 mv share/fortify .
-echo foobar
-ls share
 
 cd bfalg-shape
-conda env create -f environment.yml -q
+conda env create -f envirsonment.yml -q
 source activate bfalg-shape
 python bfalg_shape/shape.py --version
 conda list
@@ -32,5 +29,11 @@ ls
 rm -rf fortify
 rm -rf bfalg-shape
 
+echo "###"
+pwd
+echo "#"
+ls
+echo "###"
 cd ~/miniconda2/pkgs
 cp -a !(*.tar.bz2) /root/share
+ls /root/share
