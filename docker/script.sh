@@ -19,6 +19,10 @@ source activate bfalg-shape
 python bfalg_shape/shape.py --version
 conda list
 cd ..
+source deactivate
+mv ~/miniconda2 share/
+
+exit 0
 
 fortify/bin/sourceanalyzer -h
 pythonPath=`python -c "import sys;print ':'.join(sys.path)"`

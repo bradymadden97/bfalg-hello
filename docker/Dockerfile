@@ -1,6 +1,6 @@
 FROM centos:centos7
 
-WORKDIR /root
+WORKDIR SED_ROOT
 
 RUN yum -y update &&\
     yum -y install bzip2 &&\
