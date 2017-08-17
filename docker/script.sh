@@ -29,5 +29,8 @@ fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py} -python-path $pythonPath
 fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
 ls
 
+rm -rf fortify
+rm -rf bfalg-shape
+
 cd ~/miniconda2/pkgs
 cp -a !(*.tar.bz2) /root/share
