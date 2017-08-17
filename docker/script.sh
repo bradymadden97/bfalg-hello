@@ -14,7 +14,7 @@ mv share/bfalg-shape .
 mv share/fortify .
 
 cd bfalg-shape
-conda env create -f envirsonment.yml -q
+conda env create -f environment.yml -q
 source activate bfalg-shape
 python bfalg_shape/shape.py --version
 conda list
