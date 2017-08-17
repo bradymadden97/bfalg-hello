@@ -37,7 +37,6 @@ node {
     }}
     stage("Conda Build") {
 	sh "mkdir -p share/bfalg-shape && cp -a bfalg-shape/* share/bfalg-shape"
-	sh "mkdir share/fortify && cp -a /opt/hp_fortify_sca/* share/fortify"
         dir("bfalg-shape/docker") {
             sh "sed -i s*SED_ROOT*${root}*g *"
 	    sh "docker-compose rm -f --all"
