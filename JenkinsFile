@@ -36,48 +36,14 @@ node {
         sh "rm ${archiveName}"
     }}
     stage("Conda Build") {
-        if(false){
-    sh """
-    pwd
-    ls
-    curl -L https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -o miniconda.sh
-    bash miniconda.sh -b -p $root/miniconda2
-    rm miniconda.sh
-    """
-    dir("bfalg-shape"){
-                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]]) {
-            sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
-        }
-    sh """
-    export PATH="$root/miniconda2/bin:$PATH"
-    conda env create -f environment.yml
-    source activate bfalg-shape
-    conda list
-    source deactivate
-    """
-    }}
-
-    sh "mkdir -p share/bfalg-shape && cp -a bfalg-shape/* share/bfalg-shape"
+	sh "mkdir -p share/bfalg-shape && cp -a bfalg-shape/* share/bfalg-shape"
 	sh "mkdir share/fortify && cp -a /opt/hp_fortify_sca/* share/fortify"
         dir("bfalg-shape/docker") {
             sh "sed -i s*SED_ROOT*${root}*g *"
-	        sh "docker-compose rm -f --all"
+	    sh "docker-compose rm -f --all"
             sh "docker-compose up --build --no-color"
         }
-        sh "mv share/miniconda2 ."
-        sh """
-          export PATH="$root/miniconda2/bin:$PATH"
-          source activate bfalg-shape
-          cd bfalg-shape
-          /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} -python-path `python -c "import sys;print ':'.join(sys.path)"` {*.py,**/*.py}
-          /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} -scan -python-path `python -c "import sys;print ':'.join(sys.path)"` -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr
-          source deactivate
-          echo
-          echo
-          ls
-          cd ..
-        """
-	error("stop")
+	sh "mv share/miniconda2 ."
     }
 stage("Dependency Check") {
         withCredentials([
@@ -94,12 +60,16 @@ stage("Dependency Check") {
         withCredentials([
           [$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: "THREADFIX_KEY"]
         ]) {
-            sh """
-              /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} {*.py,**/*.py}
-              /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER}  -scan -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr
-	    """
-	    ///bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
-        }
-	sh "ls"
+		dir("bfalg-shape") {
+			sh """
+          		  export PATH="$root/miniconda2/bin:$PATH" && source activate bfalg-shape
+          		  /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} -python-path `python -c "import sys;print ':'.join(sys.path)"` {*.py,**/*.py}
+          		  /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} -scan -python-path `python -c "import sys;print ':'.join(sys.path)"` -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr
+          		  source deactivate
+          		  ls
+        		"""
+	    		  ///bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
+       		}
+	}
     }
 }
