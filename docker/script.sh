@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH="$HOME/miniconda2/bin:$PATH"
+export PATH="SED_ROOT/miniconda2/bin:$PATH"
 
 #cd share
 #conda env create -f environment.yml
