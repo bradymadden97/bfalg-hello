@@ -20,6 +20,7 @@ python bfalg_shape/shape.py --version
 conda list
 cd ..
 
+fortify/bin/sourceanalyzer -h
 pythonPath=`python -c "import sys;print ':'.join(sys.path)"`
 echo $pythonPath
 fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py} -python-path "$pythonPath"
