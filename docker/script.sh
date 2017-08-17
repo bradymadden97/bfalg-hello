@@ -12,8 +12,22 @@ export PATH="$HOME/miniconda2/bin:$PATH"
 
 ls share
 mv share/bfalg-shape .
+mv share/fortify .
+echo foobar
+ls share
+
 cd bfalg-shape
 conda env create -f environment.yml -q
+source activate bfalg-shape
+python bfalg_shape/shape.py --version
+conda list
 cd ..
-rm -rf share/*
-mv $HOME/miniconda2 share/
+
+pythonPath=`python -c "import sys;print ':'.join(sys.path)"`
+echo $pythonPath
+fortify/bin/sourceanalyzer bfalg-shape/{*.py,**/*.py} -python-path $pythonPath
+fortify/bin/sourceanalyzer -scan -Xmx1G -f fortifyResults.fpr
+ls
+
+cd ~/miniconda2/pkgs
+cp -a !(*.tar.bz2) /root/share
