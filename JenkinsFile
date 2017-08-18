@@ -3,8 +3,10 @@
 node {
     def root = pwd()
     def mvn = tool 'M3'
-	def fortifyBuild = "bfalg-shape-${env.BUILD_NUMBER}"
-
+    def fortifyBuild = "bfalg-shape-${env.BUILD_NUMBER}"
+    def sonar = tool 'SonarQube Scanner 3.0'
+    def projectId = "venicegeo:beachfront:bfalg-shape"
+	
     stage("Setup") {
         deleteDir()
 	sh "mkdir bfalg-shape"
@@ -73,5 +75,25 @@ stage("Dependency Check") {
         		"""
        		}
 	}
+    }
+    stage("Sonar") {
+        withCredentials([string(credentialsId: "${env.SONAR_TOKEN}", variable: 'USERNAME')]) {
+            withEnv(["HOME=${root}"]) {
+                sh """export PATH="$root/miniconda2/bin:$PATH" && source activate bfalg-shape
+		  ${sonar}/bin/sonar-scanner \
+                    -Dsonar.python.coverage.reportPath=report/coverage/coverage.xml \
+                    -Dsonar.sources=${root}/bfalg-shape/bfalg_shape \
+                    -Dsonar.host.url=${env.SONAR_URL} \
+                    -Dsonar.projectKey=${projectId} \
+                    -Dsonar.projectName=${projectId} \
+                    -Dsonar.language=py \
+                    -Dsonar.projectBaseDir=${root} \
+                    -Dsonar.tests=test \
+                    -Dsonar.projectVersion=${appvers} \
+                    -Dsonar.login=${USERNAME}
+		  source deactivate
+                """
+            }
+        }
     }
 }
