@@ -14,33 +14,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# ---Wait until new build of bfalg-shape is ready---
-responseCode=404
-failCount=0
-while [[ $responseCode != 200 ]]; do
-    echo "Waiting for bfalg-shape.int.geointservices.io ..."
-    responseCode=`curl -s -o /dev/null -w '%{http_code}' https://bfalg-shape.int.geointservices.io`
-    failCount=$((failCount+1))
-    echo Fail number $failCount
-    if [[ $failCount -eq 10 ]]; then
-      echo Failed to start
-      exit 1
-    fi
-    sleep 10s
-done
-
-
 # ---Setup---
 PZKEY=$PZ_API_KEY
 curl="curl -S -s -u $PZKEY:"" -H Content-Type:application/json"
 uuidRegex='(?:[a-g]|[0-9]){8}-(?:(?:[a-g]|[0-9]){4}-){3}(?:[a-g]|[0-9]){12}'
 
+# ---Wait until new build of bfalg-shape is ready---
+responseCode=404
+failCount=0
+while [[ $responseCode != 200 ]]; do
+    echo "Waiting for pzsvc-shape.int.geointservices.io ..."
+    responseCode=`curl -s -o /dev/null -w '%{http_code}' https://pzsvc-shape.int.geointservices.io`
+    if [[ $responseCode != 200 ]]; then
+      failCount=$((failCount+1))
+      echo Fail number $failCount
+      if [[ $failCount -eq 10 ]]; then
+        echo Failed to start
+        exit 1
+      fi
+      sleep 10s
+    fi
+done
+
+
+# ---Getting serviceId---
+serviceCurl=`$curl -X GET https://piazza.int.geointservices.io/service?keyword=BF_Algo_SHAPE_PY`
+serviceId=`echo $serviceCurl|grep -Po $uuidRegex`
 
 # ---Create test job using bfalg-shape service---
-echo "Creating job"
-jobCurl=`$curl -X POST https://piazza.int.geointservices.io/job \
-    -d '{
+jobPayload='{
         "data": {
             "dataInputs": {
                 "body": {
@@ -50,10 +52,13 @@ jobCurl=`$curl -X POST https://piazza.int.geointservices.io/job \
                 }
             },
             "dataOutput": [{"mimeType": "application/json","type": "text"}],
-            "serviceId": "238e8795-1a4d-4220-8f5c-e6434f2c4373"
+            "serviceId": "'
+jobPayload=$jobPayload$serviceId'"
         },
         "type": "execute-service"
-    }'`
+    }'
+echo "Creating job"
+jobCurl=`$curl -X POST https://piazza.int.geointservices.io/job -d "$jobPayload"`
 jobId=`echo $jobCurl|grep -Po $uuidRegex`
 
 
@@ -77,6 +82,7 @@ while [[ $jobStatus != "Success" ]]; do
     echo Bad curl
     exit 1
   fi
+  echo Current status: $jobStatus
   if [ "$jobStatus" = "Cancelled" ]; then
     echo "Job $jobId ended with status Cancelled"
     exit 1
