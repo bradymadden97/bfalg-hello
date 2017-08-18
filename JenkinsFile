@@ -6,6 +6,8 @@ node {
     def fortifyBuild = "bfalg-shape-${env.BUILD_NUMBER}"
     def sonar = tool 'SonarQube Scanner 3.0'
     def projectId = "venicegeo:beachfront:bfalg-shape"
+    def appvers = ""
+    def appName = ""
 	
     stage("Setup") {
         deleteDir()
@@ -15,8 +17,8 @@ node {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]]) {
             sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
         }
-	    def appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
-	    def appName = "bfalg-shape-${appvers}"
+	    appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
+	    appName = "bfalg-shape-${appvers}"
 	}
     }
 
