@@ -3,6 +3,7 @@
 node {
     def root = pwd()
     def mvn = tool 'M3'
+	def fortifyBuild = "bfalg-shape-${env.BUILD_NUMBER}"
 
     stage("Setup") {
         deleteDir()
@@ -64,9 +65,9 @@ stage("Dependency Check") {
 		dir("bfalg-shape") {
 			sh """
           		  export PATH="$root/miniconda2/bin:$PATH" && source activate bfalg-shape
-          		  /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} -python-path `python -c "import sys;print ':'.join(sys.path)"` {*.py,**/*.py}
-          		  /opt/hp_fortify_sca/bin/sourceanalyzer -b ${env.BUILD_NUMBER} -scan -python-path `python -c "import sys;print ':'.join(sys.path)"` -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr
-	    		  /bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${env.BUILD_NUMBER}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
+          		  /opt/hp_fortify_sca/bin/sourceanalyzer -b ${fortifyBuild} -python-path `python -c "import sys;print ':'.join(sys.path)"` {*.py,**/*.py}
+          		  /opt/hp_fortify_sca/bin/sourceanalyzer -b ${fortifyBuild} -scan -python-path `python -c "import sys;print ':'.join(sys.path)"` -Xmx1G -f fortifyResults-${env.BUILD_NUMBER}.fpr
+	    		  /bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@fortifyResults-${fortifyBuild}.fpr ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
           		  source deactivate
           		  ls
         		"""
