@@ -89,8 +89,7 @@ stage("Dependency Check") {
                     -Dsonar.projectKey=${projectId} \
                     -Dsonar.projectName=${projectId} \
                     -Dsonar.language=py \
-                    -Dsonar.projectBaseDir=${root} \
-                    -Dsonar.tests=test \
+                    -Dsonar.projectBaseDir=${root}/bfalg-shape \
                     -Dsonar.projectVersion=${appvers} \
                     -Dsonar.login=${USERNAME}
 		  source deactivate
