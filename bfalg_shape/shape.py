@@ -155,10 +155,9 @@ def convert_latlon(geoimg, shape):
     return geo_shape
 
 
-def process_fileout(filename, geojson):
+def process_fileout(fout, filename, geojson):
     # Create outfile
-    fout = args.outfile
-    if args.outfile is None:
+    if fout is None:
         fout = filename.split(".")[0] + ".geojson"
 
     # Save geojson file
@@ -166,7 +165,7 @@ def process_fileout(filename, geojson):
         f.write(json.dumps(geojson))
 
 
-def main(fn, img_size, bands=[1, 1]):
+def main(ofn, fn, img_size, bands=[1, 1]):
     # Process file
     geoimg = convert_image(fn, bands)
 
@@ -183,7 +182,7 @@ def main(fn, img_size, bands=[1, 1]):
     }
 
     # Write geojson to a file
-    process_fileout(fn, geojson)
+    process_fileout(ofn, fn, geojson)
 
     # Delete image file
     os.remove(fn)
@@ -198,10 +197,9 @@ def cli():
     args = define_arguments()
     if args.url:
         f, size = get_image_from_url(args.url)
-        main(f, size)
     elif args.infile:
         f, size = get_image_from_file(args.infile)
-        main(f, size)
+    main(args.outfile, f, size)
 
 if __name__ == "__main__":
     cli()
