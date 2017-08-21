@@ -1,6 +1,4 @@
 name: bfalg-shape
-channels:
-  - CONDA_CHANNEL
 dependencies:
     - pillow=4.2.1
     - pyproj=1.9.5.1
