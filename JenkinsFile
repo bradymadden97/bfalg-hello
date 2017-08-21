@@ -13,13 +13,21 @@ node {
         deleteDir()
 	sh "mkdir bfalg-shape"
 	dir("bfalg-shape") {
-        git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "USER", passwordVariable: "PASS"]]) {
-            sh 'sed -i "s*CONDA_CHANNEL*`echo $CONDA_CHANNEL | sed -e "s/NEXUSUSER/${USER}/g" | sed -e "s/NEXUSPASS/${PASS}/g"`*g" environment.yml'
-        }
+            git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
 	    appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
 	    appName = "bfalg-shape-${appvers}"
 	}
+	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "NUSER", passwordVariable: "NPASS"]]) {
+            sh """
+              curl -L https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -o miniconda.sh
+              bash miniconda.sh -b -p $root/miniconda2
+              rm miniconda.sh
+              export PATH="$root/miniconda2/bin:$PATH"
+              conda config --add channels `echo $CONDA_CHANNEL_URL | sed -e "s/NEXUSUSER/${NUSER}/g" | sed -e "s/NEXUSPASS/${NPASS}/g"`
+              cd bfalg-shape
+              conda env create -f environment.yml -q
+            """
+        }
     }
 
 
@@ -40,15 +48,6 @@ node {
     	  """
         sh "rm ${archiveName}"
     }}
-    stage("Conda Build") {
-	sh "mkdir -p share/bfalg-shape && cp -a bfalg-shape/* share/bfalg-shape"
-        dir("bfalg-shape/docker") {
-            sh "sed -i s*SED_ROOT*${root}*g *"
-	    sh "docker-compose rm -f --all"
-            sh "docker-compose up --build --no-color"
-        }
-	sh "mv share/miniconda2 ."
-    }
 stage("Dependency Check") {
         withCredentials([
           [$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: "THREADFIX_KEY"]
@@ -96,5 +95,14 @@ stage("Dependency Check") {
                 """
             }
         }
+    }
+    stage("Cleanup") {
+	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_STORAGE_CREDS}", usernameVariable: "NUSER", passwordVariable: "NPASS"]]) {
+	    sh """
+	      export PATH="$root/miniconda2/bin:$PATH"
+              conda config --remove channels `echo $CONDA_CHANNEL_URL | sed -e "s/NEXUSUSER/${NUSER}/g" | sed -e "s/NEXUSPASS/${NPASS}/g"`
+              rm -rf miniconda2
+	    """
+	}
     }
 }
