@@ -1,6 +1,0 @@
-version: '2'
-services:
-  bfalg-shape-install:
-    build: .
-    volumes:
-     - ../../share:SED_ROOT/share
