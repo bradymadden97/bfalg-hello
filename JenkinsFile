@@ -11,12 +11,9 @@ node {
 	
     stage("Setup") {
         deleteDir()
-	sh "mkdir bfalg-shape"
-	dir("bfalg-shape") {
             git url: "${env.GIT_URL}", branch: "${env.GIT_BRANCH}"
 	    appvers = sh(script: """git describe --long --tags --always | sed 's/\\./-/'g""", returnStdout: true).trim()
 	    appName = "bfalg-shape-${appvers}"
-	}
 	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${env.ARTIFACT_READ_ONLY_CREDS}", usernameVariable: "NUSER", passwordVariable: "NPASS"]]) {
             sh """
 	      rm -f $HOME/.condarc
@@ -26,7 +23,6 @@ node {
               export PATH="$root/miniconda2/bin:$PATH"
 	      conda config --remove channels defaults
               conda config --add channels `echo $CONDA_CHANNEL_CREDS_URL | sed -e "s/NEXUSUSER/${NUSER}/g" | sed -e "s/NEXUSPASS/${NPASS}/g"`
-              cd bfalg-shape
               conda env create -f environment.yml -q
             """
         }
@@ -54,13 +50,11 @@ stage("Dependency Check") {
         withCredentials([
           [$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: "THREADFIX_KEY"]
         ]) {
-		dir("bfalg-shape") {
 	            sh """
         	      /jslave/dependency-check/dependency-check/bin/dependency-check.sh --version
             	      /jslave/dependency-check/dependency-check/bin/dependency-check.sh --project "bfalg-shape" --scan '.' --format "XML" --enableExperimental --disableBundleAudit
 	              /bin/curl -v --insecure -H 'Accept: application/json' -X POST --form file=@dependency-check-report.xml ${env.THREADFIX_URL}/rest/applications/${THREADFIX_ID}/upload?apiKey=${THREADFIX_KEY}
 	    	    """
-		}
 	}
     }
     stage("Fortify Scans") {
@@ -85,12 +79,12 @@ stage("Dependency Check") {
                 sh """export PATH="$root/miniconda2/bin:$PATH" && source activate bfalg-shape
 		  ${sonar}/bin/sonar-scanner \
                     -Dsonar.python.coverage.reportPath=report/coverage/coverage.xml \
-                    -Dsonar.sources=${root}/bfalg-shape/bfalg_shape \
+                    -Dsonar.sources=${root}/bfalg_shape \
                     -Dsonar.host.url=${env.SONAR_URL} \
                     -Dsonar.projectKey=${projectId} \
                     -Dsonar.projectName=${projectId} \
                     -Dsonar.language=py \
-                    -Dsonar.projectBaseDir=${root}/bfalg-shape \
+                    -Dsonar.projectBaseDir=${root} \
                     -Dsonar.projectVersion=${appvers} \
                     -Dsonar.login=${USERNAME}
 		  source deactivate
