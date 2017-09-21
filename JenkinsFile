@@ -61,7 +61,6 @@ stage("Dependency Check") {
         withCredentials([
           [$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: "THREADFIX_KEY"]
         ]) {
-		dir("bfalg-shape") {
 			sh """
           		  export PATH="$root/miniconda2/bin:$PATH" && source activate bfalg-shape
           		  /opt/hp_fortify_sca/bin/sourceanalyzer -b ${fortifyBuild} -python-path `python -c "import sys;print ':'.join(sys.path)"` ./{*.py,**/*.py}
@@ -70,7 +69,6 @@ stage("Dependency Check") {
           		  source deactivate
           		  ls
         		"""
-       		}
 	}
     }
     stage("Sonar") {
