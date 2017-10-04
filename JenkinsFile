@@ -27,25 +27,7 @@ node {
             """
         }
     }
-
-
-    if(false){
-    stage("Archive") {
-        def archiveName="bfalg-shape.tgz"
-        sh "tar -cvzf ${archiveName} shape/ ci/ manifest.jenkins.yml pzsvc-exec.config environment.yml Procfile"
-        sh """
-          mvn -X --settings ~/.m2/settings.xml deploy:deploy-file -Dfile=${archiveName} \
-    		-DrepositoryId=nexus \
-    		-Durl="${env.ARTIFACT_STORAGE_DEPLOY_URL}" \
-    		-DgroupId="org.venice.beachfront" \
-    		-DgeneratePom=false \
-    		-Dpackaging=tgz \
-    		-Dmaven.repo.local="${root}/.m2/repository" \
-    		-DartifactId=bfalg-shape \
-    		-Dversion=${appvers} \
-    	  """
-        sh "rm ${archiveName}"
-    }}
+   
 stage("Dependency Check") {
         withCredentials([
           [$class: 'StringBinding', credentialsId: "${env.THREADFIX_API_KEY}", variable: "THREADFIX_KEY"]
