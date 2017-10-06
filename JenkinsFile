@@ -22,7 +22,7 @@ node {
               rm miniconda.sh
               export PATH="$root/miniconda2/bin:$PATH"
 	      conda config --remove channels defaults
-	      conda config --add channels `echo "${env.CONDA_CHANNEL_URL}" | sed "s#://#://${NEXUSUSER}:${NEXUSPASS}@#g"`
+	      conda config --add channels `echo "${env.CONDA_CHANNEL_URL}" | sed "s#://#://${NUSER}:${NPASS}@#g"`
               conda env create -f environment.yml -q
             """
         }
